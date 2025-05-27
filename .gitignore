@@ -1,0 +1,14 @@
+# === Build Directories ===
+Debug/
+Release/
+x64/
+x86/
+.vs/
+
+# === Compiled Binaries ===
+*.exe
+*.dll
+*.lib
+*.pdb
+*.obj
+*.o
