@@ -5,4 +5,5 @@
 namespace PlanetUI {
     void DrawNoiseLayerControls(ShapeSettings* shape);
     void DrawMainControls(ShapeSettings* shape, std::function<void()> onRegenerate);
+    void DrawSaveLoadControls(ShapeSettings* shape);
 }

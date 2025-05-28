@@ -1,4 +1,6 @@
 #include "planetUI.h"
+#include <fstream>
+#include <filesystem>
 #include <algorithm> // for std::iter_swap
 
 namespace PlanetUI {
@@ -63,6 +65,56 @@ namespace PlanetUI {
         }
     }
 
+    void DrawSaveLoadControls(ShapeSettings* shape) {
+        static char foldername[256] = "planets";
+        static char filename[256] = "planet_config.txt";
+
+        ImGui::InputText("Folder", foldername, sizeof(foldername));
+        ImGui::InputText("Filename", filename, sizeof(filename));
+
+        if (ImGui::Button("Save Config")) {
+            namespace fs = std::filesystem;
+            fs::path dir = foldername;
+            fs::path file_path = filename;  // Changed variable name
+            fs::path fullpath = dir / file_path;
+
+            // Create directory if it doesn't exist
+            if (!fs::exists(dir)) {
+                if (!fs::create_directories(dir)) {
+                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "Failed to create directory!");
+                    return;
+                }
+            }
+
+            std::ofstream out_file(fullpath);  
+            if (out_file) { 
+                out_file << shape->Serialize();
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Config saved successfully!");
+            }
+            else {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Failed to open file for writing!");
+            }
+        }
+
+        if (ImGui::Button("Load Config")) {
+            namespace fs = std::filesystem;
+            fs::path dir = foldername;
+            fs::path file_path = filename; 
+            fs::path fullpath = dir / file_path;
+
+            std::ifstream in_file(fullpath);
+            if (in_file) { 
+                std::string content((std::istreambuf_iterator<char>(in_file)),
+                    std::istreambuf_iterator<char>());
+                shape->Deserialize(content);
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Config loaded successfully!");
+            }
+            else {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Failed to open file for reading!");
+            }
+        }
+    }
+
     void DrawMainControls(ShapeSettings* shape, std::function<void()> onRegenerate) {
         ImGui::Begin("Planet Editor");
         ImGui::SliderFloat("Planet Radius", &shape->radius, 0.0f, 10.0f);
@@ -72,6 +124,8 @@ namespace PlanetUI {
         if (ImGui::Button("Regenerate")) {
             onRegenerate();
         }
+
+        DrawSaveLoadControls(shape);
 
         ImGui::End();
     }

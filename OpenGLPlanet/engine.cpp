@@ -59,7 +59,7 @@ void Init(GLFWwindow* window) {
     shader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
-    shape = new ShapeSettings(0.9f, 40);
+    shape = new ShapeSettings(0.9f, 20);
     //Ocean layer
     NoiseSettings* ocean = new NoiseSettings();
     shape->AddNoiseLayer(ocean); 
