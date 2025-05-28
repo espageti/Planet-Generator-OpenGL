@@ -60,7 +60,8 @@ int AddVertex(glm::vec3 pos, int resolution) {
 
 
 void GenerateSphere(std::vector<float>& verticesOut, std::vector<unsigned int>& indicesOut) {
-    
+    verticesOut.clear();
+    indicesOut.clear();
     spherePositions.clear();
     sphereNormals.clear();
     vertexMap.clear();

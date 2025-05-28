@@ -10,6 +10,7 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 #include "globals.h"
+#include "planetUI.h"
 
 
 unsigned int sphereVAO, sphereVBO, sphereEBO;
@@ -87,7 +88,7 @@ void RenderLoop(GLFWwindow* window) {
         shader->setMat4("projection", projection);
 
         shader->setVec3("lightPos", lightPos);
-
+        shader->setVec3("viewPos", cameraPos);
         // Draw mesh
         glBindVertexArray(sphereVAO);
         glDrawElements(GL_TRIANGLES, sphereIndices.size(), GL_UNSIGNED_INT, 0);
@@ -97,41 +98,10 @@ void RenderLoop(GLFWwindow* window) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Debug UI
-        ImGui::Begin("Planet Window");
-        ImGui::SliderInt("Resolution", &shape->resolution, 2, 50);
-        ImGui::SliderFloat("Planet Radius",  &shape->radius, 0.0f, 10.0f);
-        if (ImGui::Button("Regenerate")) {
-            
-            std::cout << "Regenerating with radius: " << shape->radius << std::endl;
-            sphereVertices.clear();
-            sphereIndices.clear();
-            GenerateSphere(sphereVertices, sphereIndices); 
+        PlanetUI::DrawMainControls(shape, [&]() {
+            GenerateSphere(sphereVertices, sphereIndices);
             UploadMesh(sphereVAO, sphereVBO, sphereEBO, sphereVertices, sphereIndices);
-            std::cout << "Vertices: " << sphereVertices.size() << ", Indices: " << sphereIndices.size() << std::endl;
-        }
-        int i = 0;
-        for (NoiseSettings* layer : shape->noiseLayers) {
-            ImGui::PushID(i); // Unique identifier for each layer
-
-            ImGui::Separator();
-            ImGui::Text("Layer %d", i);
-            ImGui::Checkbox("Enabled", &layer->enabled);
-
-            if (layer->enabled) {
-                ImGui::SliderFloat("Strength", &layer->strength, 0.0f, 10.0f);
-                ImGui::SliderFloat("Roughness", &layer->roughness, 0.0f, 5.0f);
-                ImGui::SliderFloat("Base Roughness", &layer->baseRoughness, 0.0f, 5.0f);
-                ImGui::SliderInt("Octaves", &layer->octaves, 1, 10);
-                ImGui::SliderFloat("Persistence", &layer->persistence, 0.0f, 1.0f);
-                ImGui::SliderFloat("Min Value", &layer->minValue, 0.0f, 2.0f);
-
-            }
-
-            ImGui::PopID();
-            i++;
-        }
-        ImGui::End();
+        });
 
         ImGuiIO& io = ImGui::GetIO();
 
@@ -145,6 +115,8 @@ void RenderLoop(GLFWwindow* window) {
 
     }
 }
+
+
 
 void ProcessInput(GLFWwindow* window) {
     ImGuiIO& io = ImGui::GetIO();

@@ -145,6 +145,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="perlinNoiseFilter.cpp" />
+    <ClCompile Include="planetUI.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shapesettings.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="noisefilter.h" />
     <ClInclude Include="noiseSettings.h" />
     <ClInclude Include="perlinNoiseFilter.h" />
+    <ClInclude Include="planetUI.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shapeSettings.h" />
   </ItemGroup>
