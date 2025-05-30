@@ -56,22 +56,25 @@ void Init(GLFWwindow* window) {
     // Load shader
     shader = new Shader("vertex.glsl", "fragment.glsl");
     shader->use();
-    shader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
-    shape = new ShapeSettings(0.9f, 20);
+    shape = new ShapeSettings(0.9f, 40);
     //Ocean layer
-    NoiseSettings* ocean = new NoiseSettings();
+    NoiseLayer* ocean = new NoiseLayer();
     shape->AddNoiseLayer(ocean); 
 
     GenerateSphere(sphereVertices, sphereIndices);
     UploadMesh(sphereVAO, sphereVBO, sphereEBO, sphereVertices, sphereIndices);
+    SetNoiseLayers(shape->noiseLayers);
 }
 
 void RenderLoop(GLFWwindow* window) {
     while (!glfwWindowShouldClose(window)) {
 
-
+        GLenum err;
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            std::cerr << "OpenGL error: " << err << std::endl;
+        }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->use();
@@ -99,8 +102,7 @@ void RenderLoop(GLFWwindow* window) {
         ImGui::NewFrame();
 
         PlanetUI::DrawMainControls(shape, [&]() {
-            GenerateSphere(sphereVertices, sphereIndices);
-            UploadMesh(sphereVAO, sphereVBO, sphereEBO, sphereVertices, sphereIndices);
+            SetNoiseLayers(shape->noiseLayers);
         });
 
         ImGuiIO& io = ImGui::GetIO();
@@ -116,7 +118,24 @@ void RenderLoop(GLFWwindow* window) {
     }
 }
 
+void SetNoiseLayers(const std::vector<NoiseLayer*> layers) {
+    shader->use();
 
+    for (int i = 0; i < layers.size() && i < 8; i++) {
+        const NoiseLayer* layer = layers[i];
+        std::string base = "noiseLayers[" + std::to_string(i) + "]";
+        shader->setBool(base + ".enabled", layer->enabled);
+        shader->setFloat(base + ".strength", layer->strength);
+        shader->setInt(base + ".octaves", layer->octaves);
+        shader->setFloat(base + ".baseRoughness", layer->baseRoughness);
+        shader->setFloat(base + ".roughness", layer->roughness);
+        shader->setFloat(base + ".persistence", layer->persistence);
+        shader->setVec3(base + ".center", layer->center);
+        shader->setFloat(base + ".minValue", layer->minValue);
+    }
+    shader->setFloat("radius", shape->radius);
+    shader->setInt("layerCount", layers.size());
+}
 
 void ProcessInput(GLFWwindow* window) {
     ImGuiIO& io = ImGui::GetIO();

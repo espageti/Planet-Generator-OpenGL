@@ -1,9 +1,10 @@
 
 #include "perlinNoiseFilter.h"
+#include "noiseLayer.h"
 #include <glm/gtc/noise.hpp>
 #include <algorithm>
 
-PerlinNoiseFilter::PerlinNoiseFilter(const NoiseSettings& settings) : settings(settings) {}
+PerlinNoiseFilter::PerlinNoiseFilter(const NoiseLayer& settings) : settings(settings) {}
 
 float PerlinNoiseFilter::Evaluate(const glm::vec3& point) const {
     float noiseValue = 0.0f;

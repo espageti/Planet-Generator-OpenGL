@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <sstream> 
 
-struct NoiseSettings {
+struct NoiseLayer {
     float strength = 0.5f;
     float roughness = 2.1f;
     float baseRoughness = 1.0f;
@@ -12,9 +12,9 @@ struct NoiseSettings {
     glm::vec3 center = glm::vec3(0.0f);
     bool enabled = true;
 
-    NoiseSettings() = default;
+    NoiseLayer() = default;
 
-    NoiseSettings(float s, float r, float baseR, int o, float p, float min, glm::vec3 c, bool e)
+    NoiseLayer(float s, float r, float baseR, int o, float p, float min, glm::vec3 c, bool e)
         : strength(s), roughness(r), baseRoughness(baseR), octaves(o), persistence(p), minValue(min), center(c), enabled(e) {}
 
     std::string Serialize() const {
@@ -37,4 +37,4 @@ struct NoiseSettings {
 
 
 
-float EvaluateNoise(const glm::vec3& point, const NoiseSettings& settings);
+float EvaluateNoise(const glm::vec3& point, const NoiseLayer& settings);

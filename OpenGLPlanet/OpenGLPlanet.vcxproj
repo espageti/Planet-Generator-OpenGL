@@ -154,8 +154,8 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="mesh.h" />
-    <ClInclude Include="noisefilter.h" />
-    <ClInclude Include="noiseSettings.h" />
+    <ClInclude Include="noiseFilter.h" />
+    <ClInclude Include="noiseLayer.h" />
     <ClInclude Include="perlinNoiseFilter.h" />
     <ClInclude Include="planetUI.h" />
     <ClInclude Include="shader.h" />
@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />
+    <None Include="noise.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

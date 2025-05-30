@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>//hash function
+#include <glm/gtx/hash.hpp>
 
 
 std::vector<glm::vec3> spherePositions;
@@ -38,7 +38,7 @@ namespace std {
 std::unordered_map<QuantizedVec3, int> vertexMap;
 
 QuantizedVec3 Quantize(glm::vec3 v, int resolution) {
-    float scale = resolution * 4.0f;  // finer scale = fewer floating point issues
+    float scale = resolution * 4.0f;  
     return {
         static_cast<int>(round(v.x * scale)),
         static_cast<int>(round(v.y * scale)),
@@ -92,7 +92,7 @@ void GenerateSphere(std::vector<float>& verticesOut, std::vector<unsigned int>& 
                 };
                 glm::vec3 unitSpherePoint = glm::normalize(cubePoint(x, y));
                 glm::vec3 finalPos = CalculatePointOnPlanet(unitSpherePoint);
-
+                //glm::vec3 finalPos = unitSpherePoint * shape->radius;
                 int idx = AddVertex(finalPos, shape->resolution);
 
                 if (x < resolution - 1 && y < resolution - 1) {
@@ -115,17 +115,17 @@ void GenerateSphere(std::vector<float>& verticesOut, std::vector<unsigned int>& 
                     indices.push_back(i1);
                     indices.push_back(i3);
 
-                    auto accumulate = [&](int a, int b, int c) {
-                        glm::vec3 n = glm::normalize(glm::cross(
-                            spherePositions[b] - spherePositions[a],
-                            spherePositions[c] - spherePositions[a]));
-                        sphereNormals[a] += n;
-                        sphereNormals[b] += n;
-                        sphereNormals[c] += n;
-                    };
+                    //auto accumulate = [&](int a, int b, int c) {
+                    //    glm::vec3 n = glm::normalize(glm::cross(
+                    //        spherePositions[b] - spherePositions[a],
+                    //        spherePositions[c] - spherePositions[a]));
+                    //    sphereNormals[a] += n;
+                    //    sphereNormals[b] += n;
+                    //    sphereNormals[c] += n;
+                    //};
 
-                    accumulate(i0, i3, i2);
-                    accumulate(i0, i1, i3);
+                    //accumulate(i0, i3, i2);
+                    //accumulate(i0, i1, i3);
                 }
             }
         }
@@ -134,14 +134,14 @@ void GenerateSphere(std::vector<float>& verticesOut, std::vector<unsigned int>& 
     // Output final interleaved vertex data
     for (int i = 0; i < spherePositions.size(); ++i) {
         glm::vec3 p = spherePositions[i];
-        glm::vec3 n = glm::normalize(sphereNormals[i]);
+        //glm::vec3 n = glm::normalize(sphereNormals[i]);
 
         verticesOut.push_back(p.x);
         verticesOut.push_back(p.y);
         verticesOut.push_back(p.z);
-        verticesOut.push_back(n.x);
-        verticesOut.push_back(n.y);
-        verticesOut.push_back(n.z);
+        //verticesOut.push_back(n.x);
+        //verticesOut.push_back(n.y);
+        //verticesOut.push_back(n.z);
     }
 
     indicesOut = indices;
@@ -149,6 +149,8 @@ void GenerateSphere(std::vector<float>& verticesOut, std::vector<unsigned int>& 
 
 glm::vec3 CalculatePointOnPlanet(glm::vec3 pointOnUnitSphere)
 {
+    return pointOnUnitSphere * shape->radius;
+    //we have now moved this stuff to the GPU
     float elevation = 0;
     for (const auto& settings: shape->noiseLayers)
     {
@@ -182,11 +184,11 @@ void UploadMesh(unsigned int& VAO, unsigned int& VBO, unsigned int& EBO,
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // Normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glBindVertexArray(0);
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
+    //glBindVertexArray(0);
 }

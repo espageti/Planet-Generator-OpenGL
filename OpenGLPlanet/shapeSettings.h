@@ -1,11 +1,11 @@
 #pragma once
 #include <vector>
 #include <sstream>
-#include "noiseSettings.h"
+#include "noiseLayer.h"
 struct ShapeSettings {
     float radius = 1.0f;
     int resolution = 40;
-    std::vector<NoiseSettings*> noiseLayers;
+    std::vector<NoiseLayer*> noiseLayers;
 
     ShapeSettings() = default;
 
@@ -33,7 +33,7 @@ struct ShapeSettings {
 
         // Read layers
         for (size_t i = 0; i < layerCount; i++) {
-            NoiseSettings* layer = new NoiseSettings();
+            NoiseLayer* layer = new NoiseLayer();
             std::string layerData;
             std::getline(ss >> std::ws, layerData); // Read whole line
             layer->Deserialize(layerData);
@@ -41,5 +41,5 @@ struct ShapeSettings {
         }
     }
     
-    void AddNoiseLayer(NoiseSettings* layer);
+    void AddNoiseLayer(NoiseLayer* layer);
 };

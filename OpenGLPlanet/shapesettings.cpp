@@ -1,6 +1,6 @@
 #include "shapesettings.h"
 
-void ShapeSettings::AddNoiseLayer(NoiseSettings* layer)
+void ShapeSettings::AddNoiseLayer(NoiseLayer* layer)
 {
 	noiseLayers.push_back(layer);
 }
