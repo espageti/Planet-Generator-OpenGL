@@ -103,5 +103,8 @@
     <None Include="noise.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="geometry.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -54,7 +54,7 @@ void Init(GLFWwindow* window) {
     glViewport(0, 0, width, height);
 
     // Load shader
-    shader = new Shader("vertex.glsl", "fragment.glsl");
+    shader = new Shader("vertex.glsl", "geometry.glsl", "fragment.glsl");
     shader->use();
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 

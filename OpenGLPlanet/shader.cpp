@@ -4,19 +4,26 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath) {
-    std::ifstream vFile(vertexPath), fFile(fragmentPath);
-    std::stringstream vStream, fStream;
+Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath) {
+    std::ifstream vFile(vertexPath), gFile(geometryPath), fFile(fragmentPath);
+    std::stringstream vStream, gStream, fStream;
     vStream << vFile.rdbuf();
+    gStream << gFile.rdbuf();
     fStream << fFile.rdbuf();
     std::string vCode = vStream.str();
+    std::string gCode = gStream.str();
     std::string fCode = fStream.str();
     const char* vShaderCode = vCode.c_str();
+    const char* gShaderCode = gCode.c_str();
     const char* fShaderCode = fCode.c_str();
 
     unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
+
+    unsigned int geometry = glCreateShader(GL_GEOMETRY_SHADER);
+    glShaderSource(geometry, 1, &gShaderCode, NULL);
+    glCompileShader(geometry);
 
     unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
@@ -24,10 +31,12 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 
     ID = glCreateProgram();
     glAttachShader(ID, vertex);
+    glAttachShader(ID, geometry);
     glAttachShader(ID, fragment);
     glLinkProgram(ID);
 
     glDeleteShader(vertex);
+    glDeleteShader(geometry);
     glDeleteShader(fragment);
 }
 

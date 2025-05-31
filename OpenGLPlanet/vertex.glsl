@@ -17,9 +17,8 @@ uniform float radius;
 uniform int layerCount;
 uniform NoiseLayer noiseLayers[8];
 
-out vec3 FragPos;
-out vec3 Normal;
-out float elevation;
+out vec3 vPosition;
+out float vElevation;
 
 // Fade function
 vec3 fade(vec3 t) {
@@ -116,10 +115,10 @@ vec3 ComputeNoiseNormal(vec3 unitSpherePos) {
 
 void main() {
     vec3 unitSpherePos = normalize(aPos);
-    elevation = EvaluateNoise(unitSpherePos);
-    vec3 worldPos = unitSpherePos * radius * (1.0 + elevation);
+    vElevation = EvaluateNoise(unitSpherePos);
+    vec3 worldPos = unitSpherePos * radius * (1.0 + vElevation);
 
-    Normal = mat3(transpose(inverse(model))) * ComputeNoiseNormal(unitSpherePos);
+    vPosition = worldPos;
     gl_Position = projection * view * model * vec4(worldPos, 1.0);
-    FragPos = vec3(model * vec4(worldPos, 1.0));
+    
 }
