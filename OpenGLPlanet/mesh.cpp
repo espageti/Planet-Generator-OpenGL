@@ -8,8 +8,6 @@
 #include <vector>
 #include <unordered_map>
 #include <glm/glm.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>
 
 
 std::vector<glm::vec3> spherePositions;
@@ -124,7 +122,7 @@ void GenerateSphere(std::vector<float>& verticesOut, std::vector<unsigned int>& 
                     //    sphereNormals[c] += n;
                     //};
 
-                    //accumulate(i0, i3, i2);
+                    //accumulate(i0, i3, i2); 
                     //accumulate(i0, i1, i3);
                 }
             }
@@ -149,7 +147,7 @@ void GenerateSphere(std::vector<float>& verticesOut, std::vector<unsigned int>& 
 
 glm::vec3 CalculatePointOnPlanet(glm::vec3 pointOnUnitSphere)
 {
-    return pointOnUnitSphere * shape->radius;
+    return pointOnUnitSphere;
     //we have now moved this stuff to the GPU
     float elevation = 0;
     for (const auto& settings: shape->noiseLayers)

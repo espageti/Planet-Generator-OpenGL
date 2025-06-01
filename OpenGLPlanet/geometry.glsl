@@ -6,10 +6,12 @@ layout (triangle_strip, max_vertices = 3) out;
 //comes from vertex shader
 in vec3 vPosition[];
 in float vElevation[];
+in vec3 vUnitSpherePos[];
 // goes to fragment shader 
 out vec3 gNormal;    
 out vec3 gPosition;  
-out float elevation;
+out float gElevation;
+out vec3 gUnitSpherePos;
 
 void main() {
     // Compute normal from triangle
@@ -21,8 +23,9 @@ void main() {
 
     for (int i = 0; i < 3; ++i) {
         gNormal = normal;
-        elevation = vElevation[i];
+        gElevation = vElevation[i];
         gPosition = vPosition[i];
+        gUnitSpherePos = vUnitSpherePos[i];
         gl_Position = gl_in[i].gl_Position;
         EmitVertex();
     }

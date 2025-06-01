@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <regex>
 #include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath) {
@@ -10,9 +11,9 @@ Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fra
     vStream << vFile.rdbuf();
     gStream << gFile.rdbuf();
     fStream << fFile.rdbuf();
-    std::string vCode = vStream.str();
-    std::string gCode = gStream.str();
-    std::string fCode = fStream.str();
+    std::string vCode = PreprocessShader(vStream.str());
+    std::string gCode = PreprocessShader(gStream.str());
+    std::string fCode = PreprocessShader(fStream.str());
     const char* vShaderCode = vCode.c_str();
     const char* gShaderCode = gCode.c_str();
     const char* fShaderCode = fCode.c_str();
@@ -40,6 +41,7 @@ Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fra
     glDeleteShader(fragment);
 }
 
+
 void Shader::use() {
     glUseProgram(ID);
 }
@@ -66,4 +68,22 @@ void Shader::setInt(const std::string& name, int value) const {
 
 void Shader::setBool(const std::string& name, bool value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+std::string Shader::PreprocessShader(const std::string& source, const std::string& includePath) {
+    std::regex includeRegex(R"(#include\s+\"([^\"]+)\")");
+    std::smatch matches;
+    std::string result = source;
+
+    while (std::regex_search(result, matches, includeRegex)) {
+        std::string includeFile = includePath + matches[1].str();
+        std::ifstream file(includeFile);
+        if (!file.is_open()) {
+            throw std::runtime_error("Could not open include file: " + includeFile);
+        }
+        std::string content((std::istreambuf_iterator<char>(file)),
+            std::istreambuf_iterator<char>());
+        result.replace(matches.position(), matches.length(), content);
+    }
+    return result;
 }

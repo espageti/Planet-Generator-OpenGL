@@ -151,6 +151,7 @@
     <ClCompile Include="shapesettings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="biomeSettings.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="mesh.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="shapeSettings.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="biomeDefs.glsl" />
     <None Include="fragment.glsl" />
     <None Include="geometry.glsl" />
     <None Include="noise.glsl" />

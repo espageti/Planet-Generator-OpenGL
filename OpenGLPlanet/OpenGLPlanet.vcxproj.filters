@@ -92,6 +92,9 @@
     <ClInclude Include="planetUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="biomeSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertex.glsl">
@@ -100,10 +103,13 @@
     <None Include="fragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="geometry.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
     <None Include="noise.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="geometry.glsl">
+    <None Include="biomeDefs.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -19,6 +19,7 @@ uniform NoiseLayer noiseLayers[8];
 
 out vec3 vPosition;
 out float vElevation;
+out vec3 vUnitSpherePos;
 
 // Fade function
 vec3 fade(vec3 t) {
@@ -90,7 +91,7 @@ float EvaluateNoise(vec3 pointOnUnitSphere) {
     return elevation;
 }
 
-// Estimate normal via spherical finite difference
+// Estimate normal via spherical finite difference (no longer using this)
 vec3 ComputeNoiseNormal(vec3 unitSpherePos) {
     const float eps = 0.001;
 
@@ -120,5 +121,7 @@ void main() {
 
     vPosition = worldPos;
     gl_Position = projection * view * model * vec4(worldPos, 1.0);
+    
+    vUnitSpherePos = unitSpherePos;
     
 }
