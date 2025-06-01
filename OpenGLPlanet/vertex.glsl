@@ -117,10 +117,11 @@ vec3 ComputeNoiseNormal(vec3 unitSpherePos) {
 void main() {
     vec3 unitSpherePos = normalize(aPos);
     vElevation = EvaluateNoise(unitSpherePos);
-    vec3 worldPos = unitSpherePos * radius * (1.0 + vElevation);
+    vec3 worldPos = (model * vec4(unitSpherePos * radius * (1.0 + vElevation), 1.0)).xyz;
+
 
     vPosition = worldPos;
-    gl_Position = projection * view * model * vec4(worldPos, 1.0);
+    gl_Position = projection * view * vec4(worldPos, 1.0);
     
     vUnitSpherePos = unitSpherePos;
     

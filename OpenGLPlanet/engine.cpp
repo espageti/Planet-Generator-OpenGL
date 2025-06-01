@@ -31,10 +31,14 @@ bool firstMouse = true;
 bool settingsMode = false;
 
 ShapeSettings* shape = nullptr;
+float rotationSpeed = 1.0;
 
 Shader* shader;
 glm::mat4 projection;
+
+glm::mat4 model;
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
 
 void Init(GLFWwindow* window) {
     // Enable depth testing
@@ -51,6 +55,7 @@ void Init(GLFWwindow* window) {
     glfwGetFramebufferSize(window, &width, &height);
     float aspect = static_cast<float>(width) / static_cast<float>(height);
     projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
+    model = glm::mat4(1.0f);
     glViewport(0, 0, width, height);
 
     // Load shader
@@ -80,12 +85,14 @@ void RenderLoop(GLFWwindow* window) {
         shader->use();
 
         // Set transformation matrices
-        glm::mat4 model = glm::mat4(1.0f);
+
         glm::mat4 view = glm::lookAt(
             cameraPos,
             cameraPos + cameraFront,
             cameraUp
         );
+        model = glm::rotate(model, glm::radians(rotationSpeed), glm::vec3(0.0, 1.0, 0.0) );
+
         shader->setMat4("model", model);
         shader->setMat4("view", view);
         shader->setMat4("projection", projection);

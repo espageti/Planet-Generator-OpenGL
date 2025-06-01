@@ -46,7 +46,7 @@ float calculateBiomeWeight(float temp, float humidity, Biome biome) {
     float tempDist = (temp - idealTemp) / tempRange;
     float tempWeight = exp(-4.0 * tempDist * tempDist);
     
-    // Humidity suitability (trapezoid)
+    // Humidity suitability (trapezoid), every value of humidity in the range will be 1
     float humidityWeight = smoothstep(biome.minHumidity-0.1, biome.minHumidity, humidity) * 
                          (1.0 - smoothstep(biome.maxHumidity, biome.maxHumidity+0.1, humidity));
     
