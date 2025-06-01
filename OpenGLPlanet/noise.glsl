@@ -1,26 +1,4 @@
 #version 330 core
-
-struct NoiseLayer {  
-    bool enabled;
-    float strength;
-    float baseRoughness;
-    float roughness;
-    float persistence;
-    int octaves;    
-    float minValue;
-    vec3 center;
-};
-
-layout (location = 0) in vec3 aPos;
-uniform mat4 model, view, projection;
-uniform float radius;
-uniform int layerCount;
-uniform NoiseLayer noiseLayers[8];
-
-out vec3 vPosition;
-out float vElevation;
-out vec3 vUnitSpherePos;
-
 // Fade function
 vec3 fade(vec3 t) {
     return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
@@ -91,37 +69,3 @@ float EvaluateNoise(vec3 pointOnUnitSphere) {
     return elevation;
 }
 
-// Estimate normal via spherical finite difference (no longer using this)
-vec3 ComputeNoiseNormal(vec3 unitSpherePos) {
-    const float eps = 0.001;
-
-    vec3 axisA = normalize(vec3(unitSpherePos.y, -unitSpherePos.x, 0.0));
-    if (length(axisA) < 0.01) axisA = vec3(1.0, 0.0, 0.0);
-    vec3 axisB = normalize(cross(unitSpherePos, axisA));
-
-    float centerElevation = EvaluateNoise(unitSpherePos);
-    vec3 center = unitSpherePos * (1.0 + centerElevation);
-
-    vec3 offsetA = normalize(unitSpherePos + eps * axisA);
-    vec3 offsetB = normalize(unitSpherePos + eps * axisB);
-
-    vec3 pointA = offsetA * (1.0 + EvaluateNoise(offsetA));
-    vec3 pointB = offsetB * (1.0 + EvaluateNoise(offsetB));
-
-    vec3 tangent1 = pointA - center;
-    vec3 tangent2 = pointB - center;
-
-    return normalize(cross(tangent1, tangent2));
-}
-
-void main() {
-    vec3 unitSpherePos = normalize(aPos);
-    vElevation = EvaluateNoise(unitSpherePos);
-    vec3 worldPos = unitSpherePos * radius * (1.0 + vElevation);
-
-    vPosition = worldPos;
-    gl_Position = projection * view * model * vec4(worldPos, 1.0);
-    
-    vUnitSpherePos = unitSpherePos;
-    
-}

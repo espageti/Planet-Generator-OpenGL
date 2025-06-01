@@ -109,6 +109,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\OpenGL\include\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,18 +151,22 @@
     <ClCompile Include="shapesettings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="biomeSettings.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="mesh.h" />
-    <ClInclude Include="noisefilter.h" />
-    <ClInclude Include="noiseSettings.h" />
+    <ClInclude Include="noiseFilter.h" />
+    <ClInclude Include="noiseLayer.h" />
     <ClInclude Include="perlinNoiseFilter.h" />
     <ClInclude Include="planetUI.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shapeSettings.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="biomeDefs.glsl" />
     <None Include="fragment.glsl" />
+    <None Include="geometry.glsl" />
+    <None Include="noise.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

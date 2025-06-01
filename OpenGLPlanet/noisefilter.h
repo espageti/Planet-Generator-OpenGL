@@ -1,6 +1,5 @@
 #pragma once
 #include <glm/glm.hpp>
-#include "noiseSettings.h"
 
 class NoiseFilter {
 public:

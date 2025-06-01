@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 
 namespace PlanetUI {
-    void DrawNoiseLayerControls(ShapeSettings* shape);
+    bool DrawNoiseLayerControls(ShapeSettings* shape);
     void DrawMainControls(ShapeSettings* shape, std::function<void()> onRegenerate);
+    void DrawSaveLoadControls(ShapeSettings* shape);
 }

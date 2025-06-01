@@ -1,12 +1,15 @@
 #include "planetUI.h"
-#include <algorithm> // for std::iter_swap
+#include <fstream>
+#include <filesystem>
+#include <algorithm>
 
 namespace PlanetUI {
 
-    void DrawNoiseLayerControls(ShapeSettings* shape) {
+    bool DrawNoiseLayerControls(ShapeSettings* shape) {
+        bool changed = false;
         int i = 0;
         for (auto it = shape->noiseLayers.begin(); it != shape->noiseLayers.end(); ) {
-            NoiseSettings* layer = *it;
+            NoiseLayer* layer = *it;
             ImGui::PushID(i);
 
             ImGui::Separator();
@@ -32,15 +35,15 @@ namespace PlanetUI {
             }
 
             ImGui::SameLine();
-            ImGui::Checkbox("Enabled", &layer->enabled);
+            changed |= ImGui::Checkbox("Enabled", &layer->enabled);
 
             if (layer->enabled) {
-                ImGui::SliderFloat("Strength", &layer->strength, 0.0f, 10.0f);
-                ImGui::SliderFloat("Roughness", &layer->roughness, 0.0f, 5.0f);
-                ImGui::SliderFloat("Base Roughness", &layer->baseRoughness, 0.0f, 5.0f);
-                ImGui::SliderInt("Octaves", &layer->octaves, 1, 10);
-                ImGui::SliderFloat("Persistence", &layer->persistence, 0.0f, 1.0f);
-                ImGui::SliderFloat("Min Value", &layer->minValue, 0.0f, 2.0f);
+                changed |= ImGui::SliderFloat("Strength", &layer->strength, 0.0f, 2.0f);
+                changed |= ImGui::SliderFloat("Roughness", &layer->roughness, 0.0f, 5.0f);
+                changed |= ImGui::SliderFloat("Base Roughness", &layer->baseRoughness, 0.0f, 5.0f);
+                changed |= ImGui::SliderInt("Octaves", &layer->octaves, 1, 10);
+                changed |= ImGui::SliderFloat("Persistence", &layer->persistence, 0.0f, 1.0f);
+                changed |= ImGui::SliderFloat("Min Value", &layer->minValue, 0.0f, 2.0f);
             }
 
             ImGui::SameLine();
@@ -48,6 +51,7 @@ namespace PlanetUI {
                 delete layer;
                 it = shape->noiseLayers.erase(it);
                 ImGui::PopID();
+                changed = true;
                 continue;
             }
             else {
@@ -58,22 +62,80 @@ namespace PlanetUI {
             i++;
         }
 
+        
         if (ImGui::Button("Add New Layer")) {
-            shape->noiseLayers.push_back(new NoiseSettings());
+            shape->noiseLayers.push_back(new NoiseLayer());
+            changed = true;
+        }
+        return true;
+    }
+
+    void DrawSaveLoadControls(ShapeSettings* shape) {
+        static char foldername[256] = "planets";
+        static char filename[256] = "planet_config.txt";
+
+        ImGui::InputText("Folder", foldername, sizeof(foldername));
+        ImGui::InputText("Filename", filename, sizeof(filename));
+
+        if (ImGui::Button("Save Config")) {
+            namespace fs = std::filesystem;
+            fs::path dir = foldername;
+            fs::path file_path = filename; 
+            fs::path fullpath = dir / file_path;
+
+            // Create directory if it doesn't exist
+            if (!fs::exists(dir)) {
+                if (!fs::create_directories(dir)) {
+                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "Failed to create directory!");
+                    return;
+                }
+            }
+
+            std::ofstream out_file(fullpath);  
+            if (out_file) { 
+                out_file << shape->Serialize();
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Config saved successfully!");
+            }
+            else {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Failed to open file for writing!");
+            }
+        }
+
+        if (ImGui::Button("Load Config")) {
+            namespace fs = std::filesystem;
+            fs::path dir = foldername;
+            fs::path file_path = filename; 
+            fs::path fullpath = dir / file_path;
+
+            std::ifstream in_file(fullpath);
+            if (in_file) { 
+                std::string content((std::istreambuf_iterator<char>(in_file)),
+                    std::istreambuf_iterator<char>());
+                shape->Deserialize(content);
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Config loaded successfully!");
+            }
+            else {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Failed to open file for reading!");
+            }
         }
     }
 
+    bool autoRegen;
     void DrawMainControls(ShapeSettings* shape, std::function<void()> onRegenerate) {
         ImGui::Begin("Planet Editor");
         ImGui::SliderFloat("Planet Radius", &shape->radius, 0.0f, 10.0f);
 
-        DrawNoiseLayerControls(shape);
+        bool update = DrawNoiseLayerControls(shape);
+        ImGui::Checkbox("Auto Regenerate", &autoRegen);
 
-        if (ImGui::Button("Regenerate")) {
+        
+        if ((autoRegen && update) || ImGui::Button("Regenerate")) {
             onRegenerate();
         }
+
+        DrawSaveLoadControls(shape);
 
         ImGui::End();
     }
 
-} // namespace PlanetUI
+} 
