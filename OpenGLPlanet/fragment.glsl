@@ -81,7 +81,7 @@ void main() {
     vec3 diffuse = diff * lightColor;
 
     //Specular
-    float specularStrength = 0.2;
+    float specularStrength = 0.6;
     vec3 viewDir = normalize(viewPos - gPosition);
     vec3 reflectDir = reflect(-lightDir, norm);  
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 4.0);

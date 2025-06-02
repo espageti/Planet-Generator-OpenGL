@@ -1,5 +1,4 @@
 struct Biome {
-    vec3 waterColor;
     vec3 lowColor;
     vec3 midColor;
     vec3 highColor;
@@ -10,13 +9,14 @@ struct Biome {
     float elevationInfluence; // 0=ignores elevation, 1=strong elevation effect
 };
 
-
+const vec3 shallowWaterColor = vec3(0.05, 0.31, 0.58);
+const vec3 deepWaterColor = vec3(0.05, 0.25, 0.45);
 const int numBiomes = 3;
 // Define biome types
 const Biome biomes[numBiomes] = Biome[numBiomes](
     // Desert
     Biome(
-        vec3(0.2, 0.4, 0.6),
+        //vec3(0.2, 0.4, 0.6),
         vec3(0.8, 0.7, 0.4),
         vec3(0.7, 0.6, 0.3),
         vec3(0.6, 0.5, 0.3),
@@ -24,7 +24,7 @@ const Biome biomes[numBiomes] = Biome[numBiomes](
     ),
     // Grass
     Biome(
-        vec3(0.1, 0.3, 0.5),
+        //vec3(0.2, 0.4, 0.6),
         vec3(0.3, 0.5, 0.2),
         vec3(0.1, 0.4, 0.1),
         vec3(0.4, 0.4, 0.3),
@@ -32,7 +32,7 @@ const Biome biomes[numBiomes] = Biome[numBiomes](
     ),
     // Tundra
     Biome(
-        vec3(0.2, 0.4, 0.6),
+        //vec3(0.2, 0.4, 0.6),
         vec3(0.6, 0.7, 0.6),
         vec3(0.8, 0.8, 0.9),
         vec3(0.9, 0.9, 1.0),
@@ -55,11 +55,10 @@ float calculateBiomeWeight(float temp, float humidity, Biome biome) {
 
 vec3 getBiomeColor(Biome biome, float elevation) {
     vec3 baseColor;
-    if (elevation < 0.1) {
-        baseColor = biome.waterColor;
-    } else if (elevation < 0.2) {
+    //water color handled outside biome
+    if (elevation < 0.2) {
         float t = smoothstep(0.1, 0.2, elevation);
-        baseColor = mix(biome.waterColor, biome.lowColor, t);
+        baseColor = mix(shallowWaterColor, biome.lowColor, t);
     } else if (elevation < 0.6) {
         baseColor = biome.lowColor;
     } else if (elevation < 0.8) {
@@ -90,13 +89,21 @@ vec3 calculateFinalBiomeColor(float temp, float humidity, float elevation, vec3 
     
     // Blend colors from all applicable biomes
     vec3 finalColor = vec3(0.0);
-    for (int i = 0; i < numBiomes; i++) {
-        if (weights[i] > 0.01) { // Skip negligible contributions
-            vec3 biomeColor = getBiomeColor(biomes[i], elevation);
+    if(elevation < 0.1)
+    {
+        float waterDepth = smoothstep(0, 0.1, elevation);
+        finalColor = mix(deepWaterColor, shallowWaterColor, waterDepth);
+    }
+    else
+    {
+        for (int i = 0; i < numBiomes; i++) {
+            if (weights[i] > 0.01) { // Skip negligible contributions
+                vec3 biomeColor = getBiomeColor(biomes[i], elevation);
             
-            // Apply elevation influence multiplier
-            float elevationEffect = mix(1.0, weights[i], biomes[i].elevationInfluence);
-            finalColor += biomeColor * weights[i] * elevationEffect;
+                // Apply elevation influence multiplier
+                float elevationEffect = mix(1.0, weights[i], biomes[i].elevationInfluence);
+                finalColor += biomeColor * weights[i] * elevationEffect;
+            }
         }
     }
     
@@ -106,6 +113,8 @@ vec3 calculateFinalBiomeColor(float temp, float humidity, float elevation, vec3 
         float snowAmount = smoothstep(0.7, 0.9, elevation) * smoothstep(0.7, 1.0, latitude);
         finalColor = mix(finalColor, vec3(0.95), snowAmount);
     }
+
+    
     
     return finalColor;
 }
