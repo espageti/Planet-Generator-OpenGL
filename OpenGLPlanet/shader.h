@@ -8,7 +8,8 @@ public:
     unsigned int ID;
 
     Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
-    void use();
+    void enable();
+    void disable();
 
     void setVec3(const std::string& name, const glm::vec3& value) const;
     void setVec3(const std::string& name, float x, float y, float z) const;

@@ -42,8 +42,11 @@ Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fra
 }
 
 
-void Shader::use() {
+void Shader::enable() {
     glUseProgram(ID);
+}
+void Shader::disable() {
+    glUseProgram(0);
 }
 
 void Shader::setVec3(const std::string& name, const glm::vec3& value) const {

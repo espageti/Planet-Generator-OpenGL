@@ -152,6 +152,7 @@
     <ClCompile Include="planetUI.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shapesettings.cpp" />
+    <ClCompile Include="sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="biomeSettings.h" />
@@ -164,13 +165,14 @@
     <ClInclude Include="planetUI.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shapeSettings.h" />
+    <ClInclude Include="sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\biomeDefs.glsl" />
-    <None Include="shaders\fragment.glsl" />
-    <None Include="shaders\geometry.glsl" />
+    <None Include="shaders\planet.frag" />
+    <None Include="shaders\planet.geom" />
     <None Include="shaders\noise.glsl" />
-    <None Include="shaders\vertex.glsl" />
+    <None Include="shaders\planet.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -124,7 +124,7 @@ namespace PlanetUI {
     bool autoRegen;
     void DrawMainControls(ShapeSettings* shape, std::function<void()> onRegenerate) {
         ImGui::Begin("Planet Editor");
-        ImGui::SliderFloat("Planet Radius", &shape->radius, 0.0f, 10.0f);
+        //ImGui::SliderFloat("Planet Radius", &shape->radius, 0.0f, 10.0f);
         ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.0, 3.0f);
 
         bool update = DrawNoiseLayerControls(shape);

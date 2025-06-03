@@ -12,12 +12,10 @@
 #include "shader.h"
 #include "globals.h"
 #include "planetUI.h"
+#include "sphere.h"
 
 
-unsigned int sphereVAO, sphereVBO, sphereEBO;
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-std::vector<float> sphereVertices;
-std::vector<unsigned int> sphereIndices;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction the camera is facing
@@ -34,11 +32,13 @@ bool settingsMode = false;
 ShapeSettings* shape = nullptr;
 float rotationSpeed = 1.0;
 
-Shader* shader;
+Shader* planetShader;
 glm::mat4 projection;
 
 glm::mat4 model;
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
+Sphere planet;
 
 
 void Init(GLFWwindow* window) {
@@ -60,17 +60,16 @@ void Init(GLFWwindow* window) {
     glViewport(0, 0, width, height);
 
     // Load shader
-    shader = new Shader("shaders/vertex.glsl", "shaders/geometry.glsl", "shaders/fragment.glsl");
-    shader->use();
-    shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    planetShader = new Shader("shaders/planet.vert", "shaders/planet.geom", "shaders/planet.frag");
+    planetShader->enable();
+    planetShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
     shape = new ShapeSettings(0.9f, 40);
     //Ocean layer
     NoiseLayer* ocean = new NoiseLayer();
     shape->AddNoiseLayer(ocean); 
 
-    GenerateSphere(sphereVertices, sphereIndices);
-    UploadMesh(sphereVAO, sphereVBO, sphereEBO, sphereVertices, sphereIndices);
+    planet.Create(shape->radius, shape->resolution);
     SetNoiseLayers(shape->noiseLayers);
 }
 
@@ -84,7 +83,7 @@ void RenderLoop(GLFWwindow* window) {
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader->use();
+        planetShader->enable();
 
         // Set transformation matrices
 
@@ -95,16 +94,16 @@ void RenderLoop(GLFWwindow* window) {
         );
         model = glm::rotate(model, glm::radians(rotationSpeed), glm::vec3(0.0, 1.0, 0.0) );
 
-        shader->setMat4("model", model);
-        shader->setMat4("view", view);
-        shader->setMat4("projection", projection);
+        planetShader->setMat4("model", model);
+        planetShader->setMat4("view", view);
+        planetShader->setMat4("projection", projection);
 
-        shader->setVec3("lightPos", lightPos);
-        shader->setVec3("viewPos", cameraPos);
+        planetShader->setVec3("lightPos", lightPos);
+        planetShader->setVec3("viewPos", cameraPos);
         // Draw mesh
-        glBindVertexArray(sphereVAO);
-        glDrawElements(GL_TRIANGLES, sphereIndices.size(), GL_UNSIGNED_INT, 0);
+        planet.Draw();
 
+        planetShader->disable();
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -128,22 +127,23 @@ void RenderLoop(GLFWwindow* window) {
 }
 
 void SetNoiseLayers(const std::vector<NoiseLayer*> layers) {
-    shader->use();
+    planetShader->enable();
 
     for (int i = 0; i < layers.size() && i < 8; i++) {
         const NoiseLayer* layer = layers[i];
         std::string base = "noiseLayers[" + std::to_string(i) + "]";
-        shader->setBool(base + ".enabled", layer->enabled);
-        shader->setFloat(base + ".strength", layer->strength);
-        shader->setInt(base + ".octaves", layer->octaves);
-        shader->setFloat(base + ".baseRoughness", layer->baseRoughness);
-        shader->setFloat(base + ".roughness", layer->roughness);
-        shader->setFloat(base + ".persistence", layer->persistence);
-        shader->setVec3(base + ".center", layer->center);
-        shader->setFloat(base + ".minValue", layer->minValue);
+        planetShader->setBool(base + ".enabled", layer->enabled);
+        planetShader->setFloat(base + ".strength", layer->strength);
+        planetShader->setInt(base + ".octaves", layer->octaves);
+        planetShader->setFloat(base + ".baseRoughness", layer->baseRoughness);
+        planetShader->setFloat(base + ".roughness", layer->roughness);
+        planetShader->setFloat(base + ".persistence", layer->persistence);
+        planetShader->setVec3(base + ".center", layer->center);
+        planetShader->setFloat(base + ".minValue", layer->minValue);
     }
-    shader->setFloat("radius", shape->radius);
-    shader->setInt("layerCount", layers.size());
+    planetShader->setFloat("radius", shape->radius);
+    planetShader->setInt("layerCount", layers.size());
+    planetShader->disable();
 }
 
 void ProcessInput(GLFWwindow* window) {
@@ -222,10 +222,8 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
 
 
 void Cleanup() {
-    glDeleteVertexArrays(1, &sphereVAO);
-    glDeleteBuffers(1, &sphereVBO);
-    glDeleteBuffers(1, &sphereEBO);
-    delete shader;
+    planet.Destroy();
+    delete planetShader;
     delete shape;
     std::cout << "Cleanup done.\n";
 }
