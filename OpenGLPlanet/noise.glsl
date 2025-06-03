@@ -1,4 +1,5 @@
-#version 330 core
+
+uniform float seed;
 // Fade function
 vec3 fade(vec3 t) {
     return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
@@ -6,7 +7,7 @@ vec3 fade(vec3 t) {
 
 // Hash function to generate pseudo-random float in [-1, 1]
 float rand(vec3 p) {
-    return fract(sin(dot(p ,vec3(127.1, 311.7, 74.7))) * 43758.5453) * 2.0 - 1.0;
+    return fract(sin(dot(p ,vec3(127.1, 311.7, 74.7)) + seed) * 43758.5453) * 2.0 - 1.0;
 }
 
 // Generate a pseudo-random normalized 3D gradient vector
@@ -43,29 +44,15 @@ float perlinNoise(vec3 pos) {
     return mix(y0, y1, f.z);
 }
 
-// Evaluate layered noise on unit sphere
-float EvaluateNoise(vec3 pointOnUnitSphere) {
-    float elevation = 0.0;
-
-    for (int i = 0; i < layerCount; i++) {
-        if (!noiseLayers[i].enabled) continue;
-
-        float frequency = noiseLayers[i].baseRoughness;
-        float amplitude = 1.0;
-        float layerValue = 0.0;
-
-        for (int j = 0; j < noiseLayers[i].octaves; j++) {
-            vec3 samplePoint = pointOnUnitSphere * frequency + noiseLayers[i].center;
-            float noiseVal = perlinNoise(samplePoint);
-            layerValue += noiseVal * amplitude;
-            frequency *= noiseLayers[i].roughness;
-            amplitude *= noiseLayers[i].persistence;
-        }
-
-        layerValue = layerValue * noiseLayers[i].strength - noiseLayers[i].minValue;
-        elevation += max(0.0, 0.5 + 0.5 * layerValue);
+float GenerateNoise(vec3 pointOnUnitSphere, float frequency, float persistence, int octaves, float roughness, float scaling)
+{
+    float noise = 0.0;
+    for (int i = 0; i < octaves; i++)
+    {
+        vec3 p = pointOnUnitSphere * frequency;
+        noise += perlinNoise(p) * scaling;
+        frequency *= roughness;
+        scaling *= persistence;
     }
-
-    return elevation;
+    return noise;
 }
-
