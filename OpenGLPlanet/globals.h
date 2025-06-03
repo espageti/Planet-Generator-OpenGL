@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include "shapeSettings.h"
 
 extern ShapeSettings* shape;

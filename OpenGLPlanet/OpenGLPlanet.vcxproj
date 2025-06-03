@@ -163,11 +163,11 @@
     <ClInclude Include="shapeSettings.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="biomeDefs.glsl" />
-    <None Include="fragment.glsl" />
-    <None Include="geometry.glsl" />
-    <None Include="noise.glsl" />
-    <None Include="vertex.glsl" />
+    <None Include="shaders\biomeDefs.glsl" />
+    <None Include="shaders\fragment.glsl" />
+    <None Include="shaders\geometry.glsl" />
+    <None Include="shaders\noise.glsl" />
+    <None Include="shaders\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
