@@ -11,9 +11,9 @@ Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fra
     vStream << vFile.rdbuf();
     gStream << gFile.rdbuf();
     fStream << fFile.rdbuf();
-    std::string vCode = PreprocessShader(vStream.str());
-    std::string gCode = PreprocessShader(gStream.str());
-    std::string fCode = PreprocessShader(fStream.str());
+    std::string vCode = PreprocessShader(vStream.str(), "shaders/");
+    std::string gCode = PreprocessShader(gStream.str(), "shaders/");
+    std::string fCode = PreprocessShader(fStream.str(), "shaders/");
     const char* vShaderCode = vCode.c_str();
     const char* gShaderCode = gCode.c_str();
     const char* fShaderCode = fCode.c_str();

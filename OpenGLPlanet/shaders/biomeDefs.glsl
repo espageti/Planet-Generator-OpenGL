@@ -16,7 +16,6 @@ const int numBiomes = 3;
 const Biome biomes[numBiomes] = Biome[numBiomes](
     // Desert
     Biome(
-        //vec3(0.2, 0.4, 0.6),
         vec3(0.8, 0.7, 0.4),
         vec3(0.7, 0.6, 0.3),
         vec3(0.6, 0.5, 0.3),
@@ -24,7 +23,6 @@ const Biome biomes[numBiomes] = Biome[numBiomes](
     ),
     // Grass
     Biome(
-        //vec3(0.2, 0.4, 0.6),
         vec3(0.3, 0.5, 0.2),
         vec3(0.1, 0.4, 0.1),
         vec3(0.4, 0.4, 0.3),
@@ -32,10 +30,9 @@ const Biome biomes[numBiomes] = Biome[numBiomes](
     ),
     // Tundra
     Biome(
-        //vec3(0.2, 0.4, 0.6),
-        vec3(0.6, 0.7, 0.6),
-        vec3(0.8, 0.8, 0.9),
-        vec3(0.9, 0.9, 1.0),
+        vec3(0.45, 0.45, 0.45),
+        vec3(0.68, 0.68, 0.68),
+        vec3(0.93, 0.93, 0.95),
         0.0, 0.4, 0.0, 0.4, 0.8
     )
 );

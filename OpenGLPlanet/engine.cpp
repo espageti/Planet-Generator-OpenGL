@@ -1,14 +1,15 @@
 #include <glad/glad.h>
-#include "engine.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "shader.h"
+#include <filesystem>
 //imgui
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
+#include "engine.h"
+#include "shader.h"
 #include "globals.h"
 #include "planetUI.h"
 
@@ -59,7 +60,7 @@ void Init(GLFWwindow* window) {
     glViewport(0, 0, width, height);
 
     // Load shader
-    shader = new Shader("vertex.glsl", "geometry.glsl", "fragment.glsl");
+    shader = new Shader("shaders/vertex.glsl", "shaders/geometry.glsl", "shaders/fragment.glsl");
     shader->use();
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
@@ -76,6 +77,7 @@ void Init(GLFWwindow* window) {
 void RenderLoop(GLFWwindow* window) {
     while (!glfwWindowShouldClose(window)) {
 
+        std::cout << "Working Directory: " << std::filesystem::current_path() << "\n";
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR) {
             std::cerr << "OpenGL error: " << err << std::endl;
