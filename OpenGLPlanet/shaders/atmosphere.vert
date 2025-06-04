@@ -28,7 +28,7 @@ const float fSamples = 5.0;
 
 float scale(float fCos) {
     float x = 1.0 - fCos;
-    return fScaleDepth/10 * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
+    return fScaleDepth * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
 }
 
 void main(void) {
