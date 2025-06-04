@@ -147,7 +147,6 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="perlinNoiseFilter.cpp" />
     <ClCompile Include="planetUI.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -158,7 +157,6 @@
     <ClInclude Include="biomeSettings.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="globals.h" />
-    <ClInclude Include="mesh.h" />
     <ClInclude Include="noiseFilter.h" />
     <ClInclude Include="noiseLayer.h" />
     <ClInclude Include="perlinNoiseFilter.h" />
@@ -168,7 +166,10 @@
     <ClInclude Include="sphere.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\atmosphere.frag" />
+    <None Include="shaders\atmosphere.vert" />
     <None Include="shaders\biomeDefs.glsl" />
+    <None Include="shaders\common.glsl" />
     <None Include="shaders\planet.frag" />
     <None Include="shaders\planet.geom" />
     <None Include="shaders\noise.glsl" />

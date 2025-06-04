@@ -124,6 +124,5 @@ unsigned int Sphere::AddVertex(glm::vec3 pos) {
 }
 
 glm::vec3 Sphere::CalculatePointOnPlanet(glm::vec3 pointOnUnitSphere) const {
-    // Your existing terrain generation logic
     return pointOnUnitSphere * m_fRadius;
 }

@@ -2,8 +2,12 @@
 
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
-#include "mesh.h"
 #include "noiseLayer.h"
+
+#include "shader.h"
+#include "globals.h"
+#include "planetUI.h"
+#include "sphere.h"
 
 
 void Init(GLFWwindow* window);

@@ -7,7 +7,8 @@ class Shader {
 public:
     unsigned int ID;
 
-    Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
+    Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+    void CheckCompileErrors(GLuint shader, std::string type);
     void enable();
     void disable();
 

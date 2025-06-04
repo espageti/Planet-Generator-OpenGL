@@ -24,9 +24,6 @@
     <ClCompile Include="engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Downloads\glad (2)\src\glad.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -71,9 +68,6 @@
     <ClInclude Include="engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -116,6 +110,15 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="shaders\planet.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\common.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\atmosphere.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\atmosphere.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

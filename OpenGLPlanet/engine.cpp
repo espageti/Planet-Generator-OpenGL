@@ -7,12 +7,8 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
-
 #include "engine.h"
-#include "shader.h"
-#include "globals.h"
-#include "planetUI.h"
-#include "sphere.h"
+
 
 
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -33,17 +29,38 @@ ShapeSettings* shape = nullptr;
 float rotationSpeed = 1.0;
 
 Shader* planetShader;
+Shader* atmosphereShader;
 glm::mat4 projection;
 
 glm::mat4 model;
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 Sphere planet;
+Sphere atmosphere;
 
+float m_fWavelength[3];
+float m_fWavelength4[3];
+
+const float PI = 3.14159;
+const int m_nSamples = 3;		// Number of sample rays to use in integral equation
+const float m_Kr = 0.0025f;		// Rayleigh scattering constant
+const float m_Kr4PI = m_Kr * 4.0f * PI;
+const float m_Km = 0.0010f;		// Mie scattering constant
+const float m_Km4PI = m_Km * 4.0f * PI;
+const float m_ESun = 20.0f;		// Sun brightness constant
+const float m_g = -0.990f;		// The Mie phase asymmetry factor
+const float m_fExposure = 2.0f;
 
 void Init(GLFWwindow* window) {
+    m_fWavelength[0] = 0.650f;		// 650 nm for red
+    m_fWavelength[1] = 0.570f;		// 570 nm for green
+    m_fWavelength[2] = 0.475f;		// 475 nm for blue
+    m_fWavelength4[0] = powf(m_fWavelength[0], 4.0f);
+    m_fWavelength4[1] = powf(m_fWavelength[1], 4.0f);
+    m_fWavelength4[2] = powf(m_fWavelength[2], 4.0f);
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -60,9 +77,10 @@ void Init(GLFWwindow* window) {
     glViewport(0, 0, width, height);
 
     // Load shader
-    planetShader = new Shader("shaders/planet.vert", "shaders/planet.geom", "shaders/planet.frag");
+    planetShader = new Shader("shaders/planet.vert", "shaders/planet.frag", "shaders/planet.geom" );
     planetShader->enable();
     planetShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+
 
     shape = new ShapeSettings(0.9f, 40);
     //Ocean layer
@@ -70,6 +88,11 @@ void Init(GLFWwindow* window) {
     shape->AddNoiseLayer(ocean); 
 
     planet.Create(shape->radius, shape->resolution);
+
+
+    atmosphereShader = new Shader("shaders/atmosphere.vert", "shaders/atmosphere.frag");
+
+    atmosphere.Create(shape->radius * 1.5f, shape->resolution);
     SetNoiseLayers(shape->noiseLayers);
 }
 
@@ -104,6 +127,50 @@ void RenderLoop(GLFWwindow* window) {
         planet.Draw();
 
         planetShader->disable();
+
+
+        atmosphereShader->enable(); 
+        
+        atmosphereShader->setMat4("model", model);
+        atmosphereShader->setMat4("view", view);
+        atmosphereShader->setMat4("projection", projection);
+        atmosphereShader->setVec3("v3CameraPos", cameraPos);
+        atmosphereShader->setVec3("v3LightPos", lightPos/glm::length(lightPos));
+        atmosphereShader->setVec3("v3InvWavelength", 1 / m_fWavelength4[0], 1 / m_fWavelength4[1], 1 / m_fWavelength4[2]);
+        float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0)) - shape->radius;
+        atmosphereShader->setFloat("fCameraHeight", cameraHeight);
+        atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
+        float atmosphereRadius = shape->radius * 1.5;
+        atmosphereShader->setFloat("fOuterRadius", atmosphereRadius);
+        atmosphereShader->setFloat("fOuterRadius2", atmosphereRadius * atmosphereRadius);
+        float planetRadius = shape->radius;
+        atmosphereShader->setFloat("fInnerRadius", planetRadius);
+        atmosphereShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
+
+        atmosphereShader->setFloat("fKrESun", m_Kr * m_ESun);
+        atmosphereShader->setFloat("fKmESun", m_Km * m_ESun);
+        atmosphereShader->setFloat("fKr4PI", m_Kr4PI);
+        atmosphereShader->setFloat("fKm4PI", m_Km4PI);
+        float scale = 1 / (atmosphereRadius - planetRadius);
+        atmosphereShader->setFloat("fScale", scale);
+        atmosphereShader->setFloat("fScaleDepth", 0.25);
+        atmosphereShader->setFloat("fScaleOverScaleDepth", scale / 0.25); 
+        float m_g = -0.990f;		// The Mie phase asymmetry factor
+        atmosphereShader->setFloat("g", m_g);
+        atmosphereShader->setFloat("g2", m_g * m_g);
+
+
+        glDepthMask(GL_FALSE);  
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE); 
+        glDisable(GL_CULL_FACE);      
+        atmosphere.Draw();
+        glEnable(GL_CULL_FACE);
+        glDisable(GL_BLEND);
+        glDepthMask(GL_TRUE);
+
+        atmosphereShader->disable();
+
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -141,7 +208,6 @@ void SetNoiseLayers(const std::vector<NoiseLayer*> layers) {
         planetShader->setVec3(base + ".center", layer->center);
         planetShader->setFloat(base + ".minValue", layer->minValue);
     }
-    planetShader->setFloat("radius", shape->radius);
     planetShader->setInt("layerCount", layers.size());
     planetShader->disable();
 }
