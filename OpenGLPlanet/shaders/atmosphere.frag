@@ -14,6 +14,6 @@ void main() {
     float fCos = dot(normalize(v3LightPos), normalize(v3Direction));
     float fMiePhase = 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos*fCos) / pow(1.0 + g2 - 2.0*g*fCos, 1.5);
     
-    vec3 color = primaryColor.rgb + 10000 * secondaryColor.rgb;
-    FragColor = vec4(color, 1.0);
+    FragColor = primaryColor + fMiePhase * secondaryColor;
+    FragColor.a = FragColor.b;
 }

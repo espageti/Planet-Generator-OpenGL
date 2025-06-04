@@ -37,6 +37,7 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 Sphere planet;
 Sphere atmosphere;
+float atmosphereThickness = 0.25;
 
 float m_fWavelength[3];
 float m_fWavelength4[3];
@@ -92,14 +93,13 @@ void Init(GLFWwindow* window) {
 
     atmosphereShader = new Shader("shaders/atmosphere.vert", "shaders/atmosphere.frag");
 
-    atmosphere.Create(shape->radius * 1.5f, shape->resolution);
+    atmosphere.Create(shape->radius * (1.0 + atmosphereThickness), shape->resolution);
     SetNoiseLayers(shape->noiseLayers);
 }
 
 void RenderLoop(GLFWwindow* window) {
     while (!glfwWindowShouldClose(window)) {
 
-        std::cout << "Working Directory: " << std::filesystem::current_path() << "\n";
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR) {
             std::cerr << "OpenGL error: " << err << std::endl;
@@ -137,10 +137,10 @@ void RenderLoop(GLFWwindow* window) {
         atmosphereShader->setVec3("v3CameraPos", cameraPos);
         atmosphereShader->setVec3("v3LightPos", lightPos/glm::length(lightPos));
         atmosphereShader->setVec3("v3InvWavelength", 1 / m_fWavelength4[0], 1 / m_fWavelength4[1], 1 / m_fWavelength4[2]);
-        float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0)) - shape->radius;
+        float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
         atmosphereShader->setFloat("fCameraHeight", cameraHeight);
         atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
-        float atmosphereRadius = shape->radius * 1.5;
+        float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);
         atmosphereShader->setFloat("fOuterRadius", atmosphereRadius);
         atmosphereShader->setFloat("fOuterRadius2", atmosphereRadius * atmosphereRadius);
         float planetRadius = shape->radius;
