@@ -13,7 +13,7 @@
 
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction the camera is facing
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -33,11 +33,11 @@ Shader* atmosphereShader;
 glm::mat4 projection;
 
 glm::mat4 model;
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(0.0, 0.0, -60.0f);
 
 Sphere planet;
 Sphere atmosphere;
-float atmosphereThickness = 0.25;
+float atmosphereThickness = 0.025;
 
 float m_fWavelength[3];
 float m_fWavelength4[3];
@@ -61,6 +61,7 @@ void Init(GLFWwindow* window) {
     m_fWavelength4[2] = powf(m_fWavelength[2], 4.0f);
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LEQUAL);
 
     glfwSetCursorPosCallback(window, MouseCallback);
@@ -83,7 +84,7 @@ void Init(GLFWwindow* window) {
     planetShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
 
-    shape = new ShapeSettings(0.9f, 40);
+    shape = new ShapeSettings(4.0f, 50);
     //Ocean layer
     NoiseLayer* ocean = new NoiseLayer();
     shape->AddNoiseLayer(ocean); 
@@ -159,15 +160,22 @@ void RenderLoop(GLFWwindow* window) {
         atmosphereShader->setFloat("g", m_g);
         atmosphereShader->setFloat("g2", m_g * m_g);
 
-
-        glDepthMask(GL_FALSE);  
+  
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE); 
-        glDisable(GL_CULL_FACE);      
+        glBlendFunc(GL_ONE, GL_ONE);
+        glFrontFace(GL_CW);
+        glDepthMask(GL_FALSE);
+        // 1. Draw back faces of the atmosphere sphere
+        // This is the common approach for volumetric effects, ensuring inner parts are drawn first.
+        glCullFace(GL_FRONT); // Cull the front faces, so only back faces are drawn
         atmosphere.Draw();
-        glEnable(GL_CULL_FACE);
-        glDisable(GL_BLEND);
+
+        // 2. Draw front faces of the atmosphere sphere
+        glCullFace(GL_BACK); // Cull the back faces, so only front faces are drawn
+        atmosphere.Draw();
         glDepthMask(GL_TRUE);
+        glFrontFace(GL_CCW);
+        glDisable(GL_BLEND);
 
         atmosphereShader->disable();
 
