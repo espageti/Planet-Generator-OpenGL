@@ -82,6 +82,7 @@ void Init(GLFWwindow* window) {
     planetShader = new Shader("shaders/planet.vert", "shaders/planet.frag", "shaders/planet.geom" );
     planetShader->enable();
     planetShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    planetShader->setFloat("maxElevation", atmosphereThickness);
 
 
     shape = new ShapeSettings(4.0f, 50);
@@ -244,7 +245,11 @@ void ProcessInput(GLFWwindow* window) {
     escPressedLastFrame = escPressedThisFrame;
 
     if (!settingsMode) {
-        const float cameraSpeed = 2.5f * 0.016f;
+        float cameraSpeed = 2.5f * 0.016f;
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        {
+            cameraSpeed *= 4;
+        }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             cameraPos += cameraSpeed * cameraFront;
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

@@ -23,8 +23,8 @@ out vec3 v3Direction;
 out vec4 primaryColor;
 out vec4 secondaryColor;
 
-const int nSamples = 5;
-const float fSamples = 5.0;
+const int nSamples = 16;
+const float fSamples = float(nSamples);
 
 float scale(float fCos) {
     float x = 1.0 - fCos;
