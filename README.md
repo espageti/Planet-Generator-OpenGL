@@ -8,6 +8,7 @@ A real time, GPU-accelerated procedural planet generator built with **OpenGL**, 
 - Real-time parameter editing and saving/loading with **ImGUI**
 - Dynamic lighting, normal computation, and perlin noise calculation in **GLSL**
 - Interactive camera
+- Atmospheric scattering
 
 ## Built With
 - **C++**
