@@ -37,7 +37,7 @@ glm::vec3 lightPos(0.0, 0.0, -60.0f);
 
 Sphere planet;
 Sphere atmosphere;
-float atmosphereThickness = 0.025;
+float atmosphereThickness = 0.25;
 
 float m_fWavelength[3];
 float m_fWavelength4[3];

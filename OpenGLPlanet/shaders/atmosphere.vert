@@ -31,6 +31,29 @@ float scale(float fCos) {
     return fScaleDepth * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
 }
 
+float densityAtPoint(vec3 densitySamplePoint)
+{
+    float heightAboveSurface = length(densitySamplePoint) -fInnerRadius;
+    float height01 = heightAboveSurface / (fOuterRadius - fInnerRadius);
+    float densityFalloff = 2.3;
+    float localDensity = exp(-height01 * densityFalloff) * (1 - height01);
+    return localDensity;
+}
+
+float opticalDepth(vec3 rayOrigin, vec3 rayDir, float rayLength)
+{
+    vec3 densitySamplePoint = rayOrigin;
+    float stepSize = rayLength / (nSamples - 1);
+    float opticalDepth = 0;
+    for (int i = 0; i < nSamples; i++)
+    {
+        float localDensity = densityAtPoint(densitySamplePoint);
+        opticalDepth += localDensity * stepSize;
+        densitySamplePoint += rayDir * stepSize;
+    }
+    return opticalDepth;
+}
+
 void main(void) {
     vec3 v3Pos = (model * vec4(aPos, 1.0)).xyz;
     vec3 v3Ray = v3Pos - v3CameraPos;
@@ -56,22 +79,26 @@ void main(void) {
     float fScaledLength = fSampleLength * fScale;
     vec3 v3SampleRay = v3Ray * fSampleLength;
     vec3 v3SamplePoint = v3Start + v3SampleRay * 0.5;
-
+    if(fCameraHeight < fOuterRadius)
+    {
+        v3SamplePoint = v3Start;
+    }
     for(int i=0; i<nSamples; i++) {
         float fHeight = length(v3SamplePoint);
         //not overly large
-        float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
+        //float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
+        float fSunRayDepth = opticalDepth(v3SamplePoint, normalize(v3LightPos - v3SamplePoint), length(v3SampleRay));
+        float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, fSampleLength * i);
+        float transmittance = exp(-fSunRayDepth + fViewRayDepth);
+        float localDensity = densityAtPoint(v3SamplePoint);
         
-        float fLightAngle = dot(v3LightPos, v3SamplePoint) / fHeight;
-        float fCameraAngle = dot(v3Ray, v3SamplePoint) / fHeight;
-        //absurdly large
-        float fScatter = (fStartOffset + fDepth*(scale(fLightAngle) - scale(fCameraAngle)));
-        vec3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
-        v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
+
+        v3FrontColor += vec3(localDensity * transmittance * fSampleLength);
         v3SamplePoint += v3SampleRay;
     }
 
     secondaryColor = vec4(v3FrontColor * fKmESun, 1.0);
+    secondaryColor.rgb = vec3(0);
     primaryColor = vec4(v3FrontColor * (v3InvWavelength * fKrESun), 1.0);
 
     gl_Position = projection * view * vec4(v3Pos, 1.0);
