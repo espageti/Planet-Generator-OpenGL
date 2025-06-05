@@ -26,7 +26,8 @@ bool firstMouse = true;
 bool settingsMode = false;
 
 ShapeSettings* shape = nullptr;
-float rotationSpeed = 1.0;
+float rotationSpeed = 0.0;
+float densityFalloff = 5.0;
 
 Shader* planetShader;
 Shader* atmosphereShader;
@@ -52,13 +53,14 @@ const float m_ESun = 20.0f;		// Sun brightness constant
 const float m_g = -0.990f;		// The Mie phase asymmetry factor
 const float m_fExposure = 2.0f;
 
+const float scatterStrength = 20;
 void Init(GLFWwindow* window) {
-    m_fWavelength[0] = 0.650f;		// 650 nm for red
-    m_fWavelength[1] = 0.570f;		// 570 nm for green
-    m_fWavelength[2] = 0.475f;		// 475 nm for blue
-    m_fWavelength4[0] = powf(m_fWavelength[0], 4.0f);
-    m_fWavelength4[1] = powf(m_fWavelength[1], 4.0f);
-    m_fWavelength4[2] = powf(m_fWavelength[2], 4.0f);
+    m_fWavelength[0] = 650;		// 650 nm for red
+    m_fWavelength[1] = 570;		// 570 nm for green
+    m_fWavelength[2] = 0475;		// 475 nm for blue
+    m_fWavelength4[0] = powf(400/m_fWavelength[0], 4.0f) * scatterStrength;
+    m_fWavelength4[1] = powf(400/m_fWavelength[1], 4.0f) * scatterStrength;
+    m_fWavelength4[2] = powf(400/m_fWavelength[2], 4.0f) * scatterStrength;
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -138,7 +140,7 @@ void RenderLoop(GLFWwindow* window) {
         atmosphereShader->setMat4("projection", projection);
         atmosphereShader->setVec3("v3CameraPos", cameraPos);
         atmosphereShader->setVec3("v3LightPos", lightPos/glm::length(lightPos));
-        atmosphereShader->setVec3("v3InvWavelength", 1 / m_fWavelength4[0], 1 / m_fWavelength4[1], 1 / m_fWavelength4[2]);
+        atmosphereShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
         float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
         atmosphereShader->setFloat("fCameraHeight", cameraHeight);
         atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
@@ -160,6 +162,8 @@ void RenderLoop(GLFWwindow* window) {
         float m_g = -0.990f;		// The Mie phase asymmetry factor
         atmosphereShader->setFloat("g", m_g);
         atmosphereShader->setFloat("g2", m_g * m_g);
+
+        atmosphereShader->setFloat("densityFalloff", densityFalloff);
 
   
         glEnable(GL_BLEND);

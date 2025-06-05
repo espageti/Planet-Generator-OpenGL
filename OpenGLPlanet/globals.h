@@ -5,3 +5,4 @@
 extern ShapeSettings* shape;
 
 extern float rotationSpeed;
+extern float densityFalloff;

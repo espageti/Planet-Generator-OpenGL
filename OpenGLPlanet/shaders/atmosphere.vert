@@ -18,6 +18,7 @@ uniform float fKm4PI;
 uniform float fScale;
 uniform float fScaleDepth;
 uniform float fScaleOverScaleDepth;
+uniform float densityFalloff;
 
 out vec3 v3Direction;
 out vec4 primaryColor;
@@ -35,7 +36,6 @@ float densityAtPoint(vec3 densitySamplePoint)
 {
     float heightAboveSurface = length(densitySamplePoint) -fInnerRadius;
     float height01 = heightAboveSurface / (fOuterRadius - fInnerRadius);
-    float densityFalloff = 2.3;
     float localDensity = exp(-height01 * densityFalloff) * (1 - height01);
     return localDensity;
 }
@@ -84,9 +84,12 @@ void main(void) {
         v3SamplePoint = v3Start;
     }
     for(int i=0; i<nSamples; i++) {
-        float fHeight = length(v3SamplePoint);
-        //not overly large
-        //float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
+        // Calculate intersection with atmosphere for sun ray
+        vec3 sunDir = normalize(v3LightPos - v3SamplePoint);
+        float B_sun = 2.0 * dot(v3SamplePoint, sunDir);
+        float C_sun = dot(v3SamplePoint, v3SamplePoint) - fOuterRadius2;
+        float fDet_sun = max(0.0, B_sun*B_sun - 4.0 * C_sun);
+        float fSunRayLength = 0.5 * (-B_sun + sqrt(fDet_sun));
         float fSunRayDepth = opticalDepth(v3SamplePoint, normalize(v3LightPos - v3SamplePoint), length(v3SampleRay));
         float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, fSampleLength * i);
         float transmittance = exp(-fSunRayDepth + fViewRayDepth);
