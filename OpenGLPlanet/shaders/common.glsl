@@ -1,19 +1,4 @@
 
-out vec4 c0; //mie color
-out vec4 c1; //rayleigh
-
-const int samples = 2;
-const float fSamples = float(samples);
-
-// The scale depth (the altitude at which the average atmospheric density is found)
-const float fScaleDepth = 0.25;
-const float fInvScaleDepth = 1.0 / fScaleDepth;
-
-// Vernier's scale equation
-float scale(float fCos) {
-    float x = 1.0 - fCos;
-    return fScaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
-}
 
 // Mie phase function
 float getMiePhase(float fCos, float fCos2, float g, float g2) {

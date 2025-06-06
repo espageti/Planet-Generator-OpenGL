@@ -27,7 +27,7 @@ bool settingsMode = false;
 
 ShapeSettings* shape = nullptr;
 float rotationSpeed = 0.0;
-float densityFalloff = 5.0;
+float densityFalloff = 1.0;
 
 Shader* planetShader;
 Shader* atmosphereShader;
@@ -42,6 +42,7 @@ float atmosphereThickness = 0.25;
 
 float m_fWavelength[3];
 float m_fWavelength4[3];
+float debug0 = 1.0;
 
 const float PI = 3.14159;
 const int m_nSamples = 3;		// Number of sample rays to use in integral equation
@@ -52,6 +53,7 @@ const float m_Km4PI = m_Km * 4.0f * PI;
 const float m_ESun = 20.0f;		// Sun brightness constant
 const float m_g = -0.990f;		// The Mie phase asymmetry factor
 const float m_fExposure = 2.0f;
+
 
 const float scatterStrength = 20;
 void Init(GLFWwindow* window) {
@@ -165,6 +167,7 @@ void RenderLoop(GLFWwindow* window) {
 
         atmosphereShader->setFloat("densityFalloff", densityFalloff);
 
+        atmosphereShader->setFloat("debug0", debug0);
   
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
