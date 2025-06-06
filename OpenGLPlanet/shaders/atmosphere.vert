@@ -33,8 +33,18 @@ const float fSamples = float(nSamples);
 bool intersects(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2) {
     float B = 2.0 * dot(v3Pos, v3Ray);
     float C = fDistance2 - fRadius2;
-    float fDet = max(0.0, B * B - 4.0 * C);
-    return (fDet > 0);
+    float fDet = B * B - 4.0 * C;
+    
+    // No intersection if ray misses sphere
+    if (fDet < 0.0) return false;
+    
+    // Calculate both solutions
+    float sqrtDet = sqrt(fDet);
+    float t0 = 0.5 * (-B - sqrtDet);
+    float t1 = 0.5 * (-B + sqrtDet);
+    
+    // Only count as intersection if at least one solution is positive
+    return (t0 > 0.0) && (t1 > 0.0);
 }
 
 // Near intersection of ray and sphere
@@ -79,11 +89,13 @@ float opticalDepth(vec3 rayOrigin, vec3 rayDir, float rayLength)
 void main(void) {
     // vector from here to camera
     vec3 v3Pos = (model * vec4(aPos, 1.0)).xyz;
-    vec3 v3Ray = v3Pos - v3CameraPos;
+    vec3 v3LookDisplacement = v3Pos - v3CameraPos;
+    
+    vec3 v3Ray = normalize(v3LookDisplacement);
     float fFar = getFarIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
-    v3Ray /= fFar;
 
     float fNear = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
+    
     vec3 v3Start = v3CameraPos + v3Ray * fNear;
     float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
     float fStartDepth = exp(-1.0 / fScaleDepth);
@@ -92,31 +104,37 @@ void main(void) {
     
     vec3 v3FrontColor = vec3(0.0, 0.0, 0.0);
 
-    float stepSize = (fFar - fNear) / fSamples;
+    float stepSize = abs(fFar - fNear) / fSamples;
     vec3 v3SampleRay = v3Ray * stepSize;
     vec3 v3SamplePoint = v3Start + v3SampleRay * 0.5;
     if(fCameraHeight < fOuterRadius)
     {
         v3SamplePoint = v3Start;
     }
-    for(int i=0; i<nSamples; i++) {
-        // Calculate intersection with atmosphere for sun ray
-        vec3 sunDir = normalize(v3LightPos - v3SamplePoint);
-        
-        float fSunRayLength = getFarIntersection(v3SamplePoint, sunDir, length(v3SamplePoint) * length(v3SamplePoint), fOuterRadius2);
-        
-        float fSunRayDepth = opticalDepth(v3SamplePoint, normalize(v3LightPos - v3SamplePoint), length(v3SampleRay));
-        if(intersects(v3SamplePoint, sunDir, length(v3SamplePoint) * length(v3SamplePoint), fInnerRadius2))
-        {
-            fSunRayDepth = 0;
-        }
-        float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, stepSize * i);
+    for(int i = 0; i < nSamples; i++) {
+        vec3 sunDir = normalize(v3LightPos);
+    
+        bool sunHitsGround = intersects(v3SamplePoint, sunDir, 
+                                      dot(v3SamplePoint, v3SamplePoint), 
+                                      fInnerRadius2);
+    
+        float fSunRayLength = getFarIntersection(v3SamplePoint, sunDir,
+                                               dot(v3SamplePoint, v3SamplePoint),
+                                               fOuterRadius2);
+        // total amount of shit in the way, between here and the sun, basically.
+        float fSunRayDepth = opticalDepth(v3SamplePoint, sunDir, fSunRayLength);
+        float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, length(v3SamplePoint - v3CameraPos) - fNear);
+    
         float transmittance = exp(-fSunRayDepth - fViewRayDepth);
         float localDensity = densityAtPoint(v3SamplePoint);
-         
-        v3FrontColor += vec3(localDensity * transmittance * stepSize) / debug0;
+    
+        v3FrontColor += vec3(localDensity * transmittance * stepSize) * debug0;
+        //v3FrontColor += vec3(fSunRayLength / (debug0 * nSamples), 0, 0);
+        
+        //v3FrontColor += vec3(stepSize * -fSunRayDepth) * debug0;
         v3SamplePoint += v3SampleRay;
     }
+    //v3FrontColor += vec3(0, 0, 1);
     v3Direction = v3CameraPos - v3Pos;
     secondaryColor = vec4(v3FrontColor * fKmESun, 1.0);
     secondaryColor.rgb = vec3(0);

@@ -115,10 +115,10 @@
     <None Include="shaders\common.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="shaders\atmosphere.frag">
+    <None Include="shaders\atmosphere.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="shaders\atmosphere.vert">
+    <None Include="shaders\atmosphere.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>
