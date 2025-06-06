@@ -95,7 +95,10 @@ void main(void) {
     float fFar = getFarIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
 
     float fNear = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
-    
+    if(fNear < 0)
+    {
+        fNear = 0;
+    }
     vec3 v3Start = v3CameraPos + v3Ray * fNear;
     float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
     float fStartDepth = exp(-1.0 / fScaleDepth);
@@ -114,10 +117,6 @@ void main(void) {
     for(int i = 0; i < nSamples; i++) {
         vec3 sunDir = normalize(v3LightPos);
     
-        bool sunHitsGround = intersects(v3SamplePoint, sunDir, 
-                                      dot(v3SamplePoint, v3SamplePoint), 
-                                      fInnerRadius2);
-    
         float fSunRayLength = getFarIntersection(v3SamplePoint, sunDir,
                                                dot(v3SamplePoint, v3SamplePoint),
                                                fOuterRadius2);
@@ -125,20 +124,15 @@ void main(void) {
         float fSunRayDepth = opticalDepth(v3SamplePoint, sunDir, fSunRayLength);
         float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, length(v3SamplePoint - v3CameraPos) - fNear);
     
-        float transmittance = exp(-fSunRayDepth - fViewRayDepth);
+        vec3 transmittance = exp((-fSunRayDepth - fViewRayDepth) * v3InvWavelength);
         float localDensity = densityAtPoint(v3SamplePoint);
     
-        v3FrontColor += vec3(localDensity * transmittance * stepSize) * debug0;
-        //v3FrontColor += vec3(fSunRayLength / (debug0 * nSamples), 0, 0);
-        
-        //v3FrontColor += vec3(stepSize * -fSunRayDepth) * debug0;
+        v3FrontColor += localDensity * transmittance * stepSize * v3InvWavelength;
         v3SamplePoint += v3SampleRay;
     }
-    //v3FrontColor += vec3(0, 0, 1);
-    v3Direction = v3CameraPos - v3Pos;
-    secondaryColor = vec4(v3FrontColor * fKmESun, 1.0);
-    secondaryColor.rgb = vec3(0);
-    primaryColor = vec4(v3FrontColor, 1.0);
+    v3Direction = normalize(v3Pos - v3CameraPos);
+    secondaryColor = vec4(v3FrontColor * fKmESun * debug0, 1.0);
+    primaryColor = vec4(v3FrontColor * (v3InvWavelength * fKrESun * debug0), 1.0);
 
     gl_Position = projection * view * vec4(v3Pos, 1.0);
 }

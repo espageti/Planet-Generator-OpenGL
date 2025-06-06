@@ -38,7 +38,7 @@ glm::vec3 lightPos(0.0, 0.0, -60.0f);
 
 Sphere planet;
 Sphere atmosphere;
-float atmosphereThickness = 0.25;
+float atmosphereThickness = 0.5;
 
 float m_fWavelength[3];
 float m_fWavelength4[3];
@@ -59,7 +59,7 @@ const float scatterStrength = 20;
 void Init(GLFWwindow* window) {
     m_fWavelength[0] = 650;		// 650 nm for red
     m_fWavelength[1] = 570;		// 570 nm for green
-    m_fWavelength[2] = 0475;		// 475 nm for blue
+    m_fWavelength[2] = 475;		// 475 nm for blue
     m_fWavelength4[0] = powf(400/m_fWavelength[0], 4.0f) * scatterStrength;
     m_fWavelength4[1] = powf(400/m_fWavelength[1], 4.0f) * scatterStrength;
     m_fWavelength4[2] = powf(400/m_fWavelength[2], 4.0f) * scatterStrength;
