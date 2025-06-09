@@ -5,6 +5,7 @@ uniform mat4 model, projection, view;
 uniform vec3 v3CameraPos;
 uniform vec3 v3LightPos;
 uniform vec3 v3InvWavelength;
+uniform vec3 v3SunlightIntensity;
 uniform float fCameraHeight;
 uniform float fCameraHeight2;
 uniform float fOuterRadius;
@@ -22,8 +23,8 @@ uniform float densityFalloff;
 uniform float debug0;
 
 out vec3 v3Direction;
-out vec4 primaryColor;
-out vec4 secondaryColor;
+out vec4 rayleighColor;
+out vec4 mieColor;
 
 const int nSamples = 16;
 const float fSamples = float(nSamples);
@@ -93,7 +94,10 @@ void main(void) {
     
     vec3 v3Ray = normalize(v3LookDisplacement);
     float fFar = getFarIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
-
+    if(intersects(v3CameraPos, v3Ray, fCameraHeight2, fInnerRadius2))
+    {
+        fFar = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fInnerRadius2);
+    }
     float fNear = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
     if(fNear < 0)
     {
@@ -130,9 +134,9 @@ void main(void) {
         v3FrontColor += localDensity * transmittance * stepSize * v3InvWavelength;
         v3SamplePoint += v3SampleRay;
     }
-    v3Direction = normalize(v3Pos - v3CameraPos);
-    secondaryColor = vec4(v3FrontColor * fKmESun * debug0, 1.0);
-    primaryColor = vec4(v3FrontColor * (v3InvWavelength * fKrESun * debug0), 1.0);
+    v3Direction = normalize(v3CameraPos - v3Pos);
+    mieColor.rgb = v3FrontColor * v3InvWavelength * fKmESun * debug0;
+    rayleighColor.rgb = v3FrontColor * (v3InvWavelength * fKrESun * debug0);
 
     gl_Position = projection * view * vec4(v3Pos, 1.0);
 }

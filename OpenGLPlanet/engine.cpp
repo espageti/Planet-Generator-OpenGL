@@ -34,11 +34,11 @@ Shader* atmosphereShader;
 glm::mat4 projection;
 
 glm::mat4 model;
-glm::vec3 lightPos(0.0, 0.0, -60.0f);
+glm::vec3 lightPos(0.0, 0.0, -600.0f);
 
 Sphere planet;
 Sphere atmosphere;
-float atmosphereThickness = 0.5;
+float atmosphereThickness = 0.25;
 
 float m_fWavelength[3];
 float m_fWavelength4[3];
@@ -144,6 +144,7 @@ void RenderLoop(GLFWwindow* window) {
         atmosphereShader->setVec3("v3LightPos", lightPos/glm::length(lightPos));
         atmosphereShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
         float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
+        atmosphereShader->setVec3("v3SunlightIntensity", glm::vec3(1, 0, 0));
         atmosphereShader->setFloat("fCameraHeight", cameraHeight);
         atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
         float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);
