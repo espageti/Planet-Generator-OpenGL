@@ -24,10 +24,12 @@ float lastY = 300.0f;
 bool firstMouse = true;
 
 bool settingsMode = false;
+bool firstPersonMode = false;
 
 ShapeSettings* shape = nullptr;
 float rotationSpeed = 0.0;
 float densityFalloff = 1.0;
+bool atmosphereEnabled = true;
 
 Shader* planetShader;
 Shader* atmosphereShader;
@@ -50,7 +52,7 @@ const float m_Kr = 0.0025f;		// Rayleigh scattering constant
 const float m_Kr4PI = m_Kr * 4.0f * PI;
 const float m_Km = 0.0010f;		// Mie scattering constant
 const float m_Km4PI = m_Km * 4.0f * PI;
-const float m_ESun = 20.0f;		// Sun brightness constant
+const float m_ESun = 300.0f;		// Sun brightness constant
 const float m_g = -0.990f;		// The Mie phase asymmetry factor
 const float m_fExposure = 2.0f;
 
@@ -115,13 +117,16 @@ void RenderLoop(GLFWwindow* window) {
         planetShader->enable();
 
         // Set transformation matrices
-
-        glm::mat4 view = glm::lookAt(
-            cameraPos,
-            cameraPos + cameraFront,
-            cameraUp
-        );
-        model = glm::rotate(model, glm::radians(rotationSpeed), glm::vec3(0.0, 1.0, 0.0) );
+        
+        model = glm::rotate(model, glm::radians(rotationSpeed), glm::vec3(0.0, 1.0, 0.0));
+        if (firstPersonMode)
+        {
+            glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
+            cameraPos = glm::vec3(rotation * glm::vec4(cameraPos, 1.0));
+            cameraFront = glm::normalize(cameraFront); // Ensure direction is unit length
+            cameraUp = glm::normalize(cameraUp);
+        }
+        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         planetShader->setMat4("model", model);
         planetShader->setMat4("view", view);
@@ -134,60 +139,63 @@ void RenderLoop(GLFWwindow* window) {
 
         planetShader->disable();
 
+        if (atmosphereEnabled)
+        {
 
-        atmosphereShader->enable(); 
-        
-        atmosphereShader->setMat4("model", model);
-        atmosphereShader->setMat4("view", view);
-        atmosphereShader->setMat4("projection", projection);
-        atmosphereShader->setVec3("v3CameraPos", cameraPos);
-        atmosphereShader->setVec3("v3LightPos", lightPos/glm::length(lightPos));
-        atmosphereShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
-        float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
-        atmosphereShader->setVec3("v3SunlightIntensity", glm::vec3(1, 0, 0));
-        atmosphereShader->setFloat("fCameraHeight", cameraHeight);
-        atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
-        float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);
-        atmosphereShader->setFloat("fOuterRadius", atmosphereRadius);
-        atmosphereShader->setFloat("fOuterRadius2", atmosphereRadius * atmosphereRadius);
-        float planetRadius = shape->radius;
-        atmosphereShader->setFloat("fInnerRadius", planetRadius);
-        atmosphereShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
 
-        atmosphereShader->setFloat("fKrESun", m_Kr * m_ESun);
-        atmosphereShader->setFloat("fKmESun", m_Km * m_ESun);
-        atmosphereShader->setFloat("fKr4PI", m_Kr4PI);
-        atmosphereShader->setFloat("fKm4PI", m_Km4PI);
-        float scale = 1 / (atmosphereRadius - planetRadius);
-        atmosphereShader->setFloat("fScale", scale);
-        atmosphereShader->setFloat("fScaleDepth", 0.25);
-        atmosphereShader->setFloat("fScaleOverScaleDepth", scale / 0.25); 
-        float m_g = -0.990f;		// The Mie phase asymmetry factor
-        atmosphereShader->setFloat("g", m_g);
-        atmosphereShader->setFloat("g2", m_g * m_g);
 
-        atmosphereShader->setFloat("densityFalloff", densityFalloff);
+            atmosphereShader->enable();
 
-        atmosphereShader->setFloat("debug0", debug0);
-  
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glFrontFace(GL_CW);
-        glDepthMask(GL_FALSE);
-        // 1. Draw back faces of the atmosphere sphere
-        // This is the common approach for volumetric effects, ensuring inner parts are drawn first.
-        glCullFace(GL_FRONT); // Cull the front faces, so only back faces are drawn
-        atmosphere.Draw();
+            atmosphereShader->setMat4("model", model);
+            atmosphereShader->setMat4("view", view);
+            atmosphereShader->setMat4("projection", projection);
+            atmosphereShader->setVec3("v3CameraPos", cameraPos);
+            atmosphereShader->setVec3("v3LightPos", lightPos / glm::length(lightPos));
+            atmosphereShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
+            float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
+            atmosphereShader->setVec3("v3SunlightIntensity", glm::vec3(1, 0, 0));
+            atmosphereShader->setFloat("fCameraHeight", cameraHeight);
+            atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
+            float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);
+            atmosphereShader->setFloat("fOuterRadius", atmosphereRadius);
+            atmosphereShader->setFloat("fOuterRadius2", atmosphereRadius * atmosphereRadius);
+            float planetRadius = shape->radius;
+            atmosphereShader->setFloat("fInnerRadius", planetRadius);
+            atmosphereShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
 
-        // 2. Draw front faces of the atmosphere sphere
-        glCullFace(GL_BACK); // Cull the back faces, so only front faces are drawn
-        atmosphere.Draw();
-        glDepthMask(GL_TRUE);
-        glFrontFace(GL_CCW);
-        glDisable(GL_BLEND);
+            atmosphereShader->setFloat("fKrESun", m_Kr * m_ESun);
+            atmosphereShader->setFloat("fKmESun", m_Km * m_ESun);
+            atmosphereShader->setFloat("fKr4PI", m_Kr4PI);
+            atmosphereShader->setFloat("fKm4PI", m_Km4PI);
+            float scale = 1 / (atmosphereRadius - planetRadius);
+            atmosphereShader->setFloat("fScale", scale);
+            atmosphereShader->setFloat("fScaleDepth", 0.25);
+            atmosphereShader->setFloat("fScaleOverScaleDepth", scale / 0.25);
+            float m_g = -0.990f;		// The Mie phase asymmetry factor
+            atmosphereShader->setFloat("g", m_g);
+            atmosphereShader->setFloat("g2", m_g * m_g);
 
-        atmosphereShader->disable();
+            atmosphereShader->setFloat("densityFalloff", densityFalloff);
 
+            atmosphereShader->setFloat("debug0", debug0);
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE);
+            glFrontFace(GL_CW);
+            glDepthMask(GL_FALSE);
+            // 1. Draw back faces of the atmosphere sphere
+            glCullFace(GL_FRONT); // Cull the front faces, so only back faces are drawn
+            atmosphere.Draw();
+
+            // 2. Draw front faces of the atmosphere sphere
+            glCullFace(GL_BACK); // Cull the back faces, so only front faces are drawn
+            atmosphere.Draw();
+            glDepthMask(GL_TRUE);
+            glFrontFace(GL_CCW);
+            glDisable(GL_BLEND);
+
+            atmosphereShader->disable();
+        }
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -253,19 +261,48 @@ void ProcessInput(GLFWwindow* window) {
     escPressedLastFrame = escPressedThisFrame;
 
     if (!settingsMode) {
+
         float cameraSpeed = 2.5f * 0.016f;
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        if (firstPersonMode)
         {
-            cameraSpeed *= 4;
+
+            glm::vec3 up = normalize(cameraPos);
+            glm::vec3 right = normalize(cross(cameraFront, up));
+            glm::vec3 forward = normalize(cross(up, right)); // Local tangent forward
+
+            float velocity = cameraSpeed;
+
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                cameraPos += forward * velocity;
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                cameraPos -= forward * velocity;
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                cameraPos -= right * velocity;
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                cameraPos += right * velocity;
+
+            // Clamp to surface
+            cameraPos = normalize(cameraPos) * shape->radius;
+            cameraPos *= 1.05;
+
+            cameraUp = up;
         }
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            cameraPos += cameraSpeed * cameraFront;
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cameraPos -= cameraSpeed * cameraFront;
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        else
+        {
+            float cameraSpeed = 2.5f * 0.016f;
+            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+            {
+                cameraSpeed *= 4;
+            }
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                cameraPos += cameraSpeed * cameraFront;
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                cameraPos -= cameraSpeed * cameraFront;
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        }  
     }
 }
 
@@ -299,12 +336,29 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 
-    // Update camera front vector
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(direction);
+    if (false)
+    {
+
+        glm::vec3 up = normalize(cameraPos);
+        glm::vec3 right = normalize(cross(cameraFront, up));
+        glm::vec3 forward = normalize(cross(up, right)); // Local tangent forward
+
+        glm::mat4 rotYaw = glm::rotate(glm::mat4(1.0f), glm::radians(yaw), up);
+        glm::mat4 rotPitch = glm::rotate(glm::mat4(1.0f), glm::radians(pitch), right);
+
+        cameraFront = glm::normalize(glm::vec3(rotPitch * rotYaw * glm::vec4(forward, 0.0f)));
+    }
+    else
+    {
+        // Update camera front vector
+        glm::vec3 direction;
+        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        direction.y = sin(glm::radians(pitch));
+        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        cameraFront = glm::normalize(direction);
+    }
+    
+
 }
 
 

@@ -135,8 +135,14 @@ void main(void) {
         v3SamplePoint += v3SampleRay;
     }
     v3Direction = normalize(v3CameraPos - v3Pos);
-    mieColor.rgb = v3FrontColor * v3InvWavelength * fKmESun * debug0;
-    rayleighColor.rgb = v3FrontColor * (v3InvWavelength * fKrESun * debug0);
+
+    //for (int i = 0; i < 3; i++)
+    //{
+    //    mieColor[i] = fKmESun * debug0 * v3FrontColor[i];
+    //    rayleighColor[i] = fKrESun * debug0 *  v3FrontColor[i]; //idk what kinda, but this looks fine
+    //}
+    mieColor.rgb = fKmESun * debug0  * v3FrontColor;
+    rayleighColor.rgb = fKrESun * debug0 * v3FrontColor;
 
     gl_Position = projection * view * vec4(v3Pos, 1.0);
 }

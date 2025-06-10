@@ -128,7 +128,9 @@ namespace PlanetUI {
         ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.0, 3.0f);
         ImGui::SliderFloat("Density Falloff", &densityFalloff, 0.0, 30.0f);
         ImGui::InputFloat("Debug Value", &debug0, 0.0, 4.0);
-
+        
+        ImGui::Checkbox("Atmosphere", &atmosphereEnabled);
+        ImGui::Checkbox("First Person", &firstPersonMode);
         bool update = DrawNoiseLayerControls(shape);
         ImGui::Checkbox("Auto Regenerate", &autoRegen);
 
