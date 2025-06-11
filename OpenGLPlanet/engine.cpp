@@ -13,9 +13,16 @@
 
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction the camera is facing
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -10.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);  // Direction the camera is facing
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+//tangent to the sphere where the player is standing, should be identity when not in first person mode
+glm::mat3 cameraBasis = glm::mat3(
+    glm::vec3(1, 0, 0),  // right (x)
+    glm::vec3(0, 1, 0),  // up    (y)
+    glm::vec3(0, 0, 1)  // forward (z, looking down -Z)
+);
+
 
 float yaw = -90.0f;  // Initialize facing towards -Z
 float pitch = 0.0f;
@@ -36,7 +43,7 @@ Shader* atmosphereShader;
 glm::mat4 projection;
 
 glm::mat4 model;
-glm::vec3 lightPos(0.0, 0.0, -600.0f);
+glm::vec3 lightPos(0.0, 100.0f, -600.0f);
 
 Sphere planet;
 Sphere atmosphere;
@@ -103,6 +110,7 @@ void Init(GLFWwindow* window) {
 
     atmosphere.Create(shape->radius * (1.0 + atmosphereThickness), shape->resolution);
     SetNoiseLayers(shape->noiseLayers);
+
 }
 
 void RenderLoop(GLFWwindow* window) {
@@ -117,17 +125,19 @@ void RenderLoop(GLFWwindow* window) {
         planetShader->enable();
 
         // Set transformation matrices
-        
-        model = glm::rotate(model, glm::radians(rotationSpeed), glm::vec3(0.0, 1.0, 0.0));
+
+        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
         if (firstPersonMode)
         {
-            glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
             cameraPos = glm::vec3(rotation * glm::vec4(cameraPos, 1.0));
-            cameraFront = glm::normalize(cameraFront); // Ensure direction is unit length
+             // Ensure direction is unit length
             cameraUp = glm::normalize(cameraUp);
         }
-        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        glm::vec3 front = cameraBasis * glm::normalize(cameraFront);
+        std::cout << cameraFront.x << " " << cameraFront.y << " " << cameraFront.z << std::endl;
+        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + front, cameraUp);
 
+        model = rotation * model;
         planetShader->setMat4("model", model);
         planetShader->setMat4("view", view);
         planetShader->setMat4("projection", projection);
@@ -262,20 +272,20 @@ void ProcessInput(GLFWwindow* window) {
 
     if (!settingsMode) {
 
+        glm::vec3 front = cameraBasis * cameraFront;
         float cameraSpeed = 2.5f * 0.016f;
         if (firstPersonMode)
         {
 
             glm::vec3 up = normalize(cameraPos);
-            glm::vec3 right = normalize(cross(cameraFront, up));
-            glm::vec3 forward = normalize(cross(up, right)); // Local tangent forward
+            glm::vec3 right = normalize(cross(front, up));
 
             float velocity = cameraSpeed;
 
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                cameraPos += forward * velocity;
+                cameraPos += front * velocity;
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                cameraPos -= forward * velocity;
+                cameraPos -= front * velocity;
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
                 cameraPos -= right * velocity;
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
@@ -295,13 +305,13 @@ void ProcessInput(GLFWwindow* window) {
                 cameraSpeed *= 4;
             }
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                cameraPos += cameraSpeed * cameraFront;
+                cameraPos += cameraSpeed * front;
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                cameraPos -= cameraSpeed * cameraFront;
+                cameraPos -= cameraSpeed * front;
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+                cameraPos -= glm::normalize(glm::cross(front, cameraUp)) * cameraSpeed;
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+                cameraPos += glm::normalize(glm::cross(front, cameraUp)) * cameraSpeed;
         }  
     }
 }
@@ -336,31 +346,25 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 
-    if (false)
+    if (firstPersonMode)
     {
 
         glm::vec3 up = normalize(cameraPos);
-        glm::vec3 right = normalize(cross(cameraFront, up));
-        glm::vec3 forward = normalize(cross(up, right)); // Local tangent forward
-
-        glm::mat4 rotYaw = glm::rotate(glm::mat4(1.0f), glm::radians(yaw), up);
-        glm::mat4 rotPitch = glm::rotate(glm::mat4(1.0f), glm::radians(pitch), right);
-
-        cameraFront = glm::normalize(glm::vec3(rotPitch * rotYaw * glm::vec4(forward, 0.0f)));
+        glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0]));
+        glm::vec3 right = -normalize(cross(forward, up));
+        cameraBasis[0] = right;
+        cameraBasis[1] = up;
+        cameraBasis[2] = forward;
     }
-    else
-    {
-        // Update camera front vector
-        glm::vec3 direction;
-        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        direction.y = sin(glm::radians(pitch));
-        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        cameraFront = glm::normalize(direction);
-    }
+    // Update camera front vector
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront =  glm::normalize(direction);
+    cameraUp = cameraBasis * glm::vec3(0, 1, 0);
     
-
 }
-
 
 void Cleanup() {
     planet.Destroy();
