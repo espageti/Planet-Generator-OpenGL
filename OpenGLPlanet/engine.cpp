@@ -14,13 +14,13 @@
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -10.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);  // Direction the camera is facing
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction the camera is facing
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 //tangent to the sphere where the player is standing, should be identity when not in first person mode
 glm::mat3 cameraBasis = glm::mat3(
     glm::vec3(1, 0, 0),  // right (x)
     glm::vec3(0, 1, 0),  // up    (y)
-    glm::vec3(0, 0, 1)  // forward (z, looking down -Z)
+    glm::vec3(0, 0, 1)  // forward (z)
 );
 
 
@@ -350,7 +350,7 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     {
 
         glm::vec3 up = normalize(cameraPos);
-        glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0]));
+        glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0])); //gotta make it negative again, to cancel out when I made right negative
         glm::vec3 right = -normalize(cross(forward, up));
         cameraBasis[0] = right;
         cameraBasis[1] = up;
