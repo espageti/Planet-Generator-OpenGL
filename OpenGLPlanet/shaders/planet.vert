@@ -11,9 +11,9 @@ struct NoiseLayer {
     vec3 center;
 };
 
+
 layout (location = 0) in vec3 aPos;
 uniform mat4 model, view, projection;
-uniform float radius;
 uniform int layerCount;
 uniform NoiseLayer noiseLayers[8];
 
@@ -65,7 +65,7 @@ vec3 ComputeNoiseNormal(vec3 unitSpherePos) {
 void main() {
     vec3 unitSpherePos = normalize(aPos);
     vElevation = EvaluateNoise(unitSpherePos);
-    vec3 worldPos = (model * vec4(unitSpherePos * radius * (1.0 + vElevation), 1.0)).xyz;
+    vec3 worldPos = (model * vec4(aPos * (1.0 + vElevation), 1.0)).xyz;
 
 
     vPosition = worldPos;

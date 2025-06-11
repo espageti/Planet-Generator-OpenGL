@@ -7,8 +7,10 @@ class Shader {
 public:
     unsigned int ID;
 
-    Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
-    void use();
+    Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+    void CheckCompileErrors(GLuint shader, std::string type);
+    void enable();
+    void disable();
 
     void setVec3(const std::string& name, const glm::vec3& value) const;
     void setVec3(const std::string& name, float x, float y, float z) const;

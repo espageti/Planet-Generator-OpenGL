@@ -9,6 +9,7 @@ in vec3 gUnitSpherePos;
 uniform vec3 lightPos;  
 uniform vec3 lightColor;
 uniform vec3 viewPos;
+uniform float maxElevation;
 #include "biomeDefs.glsl"
 #include "noise.glsl"
 
@@ -38,7 +39,6 @@ void main() {
     
     float humidity = (GenerateNoise(gUnitSpherePos, 2.1, 0.4, 4, 2.5, 0.5) * 0.5 + 0.5) - abs(gUnitSpherePos.y)/2.4; 
     
-    float maxElevation = 0.1;
     vec3 vBiomeColor = calculateFinalBiomeColor(temp, humidity, gElevation / maxElevation, gUnitSpherePos);
 
     

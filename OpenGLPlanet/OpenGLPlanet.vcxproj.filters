@@ -24,9 +24,6 @@
     <ClCompile Include="engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Downloads\glad (2)\src\glad.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -63,12 +60,12 @@
     <ClCompile Include="planetUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
@@ -95,21 +92,33 @@
     <ClInclude Include="biomeSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\biomeDefs.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="shaders\fragment.glsl">
+    <None Include="shaders\planet.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="shaders\geometry.glsl">
+    <None Include="shaders\planet.geom">
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="shaders\noise.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="shaders\vertex.glsl">
+    <None Include="shaders\planet.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\common.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\atmosphere.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\atmosphere.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

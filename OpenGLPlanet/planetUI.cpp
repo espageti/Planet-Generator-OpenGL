@@ -121,12 +121,16 @@ namespace PlanetUI {
         }
     }
 
-    bool autoRegen;
+    bool autoRegen = true;
     void DrawMainControls(ShapeSettings* shape, std::function<void()> onRegenerate) {
         ImGui::Begin("Planet Editor");
-        ImGui::SliderFloat("Planet Radius", &shape->radius, 0.0f, 10.0f);
+        //ImGui::SliderFloat("Planet Radius", &shape->radius, 0.0f, 10.0f);
         ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.0, 3.0f);
-
+        ImGui::SliderFloat("Density Falloff", &densityFalloff, 0.0, 30.0f);
+        ImGui::InputFloat("Debug Value", &debug0, 0.0, 4.0);
+        
+        ImGui::Checkbox("Atmosphere", &atmosphereEnabled);
+        ImGui::Checkbox("First Person", &firstPersonMode);
         bool update = DrawNoiseLayerControls(shape);
         ImGui::Checkbox("Auto Regenerate", &autoRegen);
 
