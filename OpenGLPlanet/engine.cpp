@@ -33,7 +33,7 @@ glm::mat3 cameraBasis = glm::mat3(
 );
 
 
-float yaw = -90.0f;  // Initialize facing towards -Z
+float yaw = 90.0f;  // Initialize facing towards Z
 float pitch = 0.0f;
 float lastX = 400.0f;  // Initial mouse position (center of screen)
 float lastY = 300.0f;

@@ -24,9 +24,9 @@
     <ClCompile Include="engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Downloads\glad (2)\src\glad.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
+    <ClCompile Include="vendor\glad\src\glad.c">
+  	<Filter>Resource Files</Filter>
+    ClCompile>
     <ClCompile Include="shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
