@@ -9,7 +9,11 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include "engine.h"
 
-
+// FPS counter variables
+double lastFrameTime = 0.0;
+double currentFrameTime = 0.0;
+double frameTime = 0.0;
+double fps = 0.0;
 
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
@@ -66,6 +70,9 @@ const float m_fExposure = 2.0f;
 
 const float scatterStrength = 20;
 void Init(GLFWwindow* window) {
+    // Initialize last frame time
+    lastFrameTime = glfwGetTime();
+
     m_fWavelength[0] = 650;		// 650 nm for red
     m_fWavelength[1] = 570;		// 570 nm for green
     m_fWavelength[2] = 475;		// 475 nm for blue
@@ -113,8 +120,42 @@ void Init(GLFWwindow* window) {
 
 }
 
+void UpdateFPS() {
+    // Get current time
+    currentFrameTime = glfwGetTime();
+    
+    // Calculate time since last frame
+    frameTime = currentFrameTime - lastFrameTime;
+    
+    // Calculate FPS (avoid division by zero)
+    fps = (frameTime > 0.0) ? (1.0 / frameTime) : 0.0;
+    
+    // Update last frame time
+    lastFrameTime = currentFrameTime;
+}
+
+void RenderFPSCounter() {
+    // Set up ImGui window in the top-right corner with FPS display
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 150, 10), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(140, 70), ImGuiCond_FirstUseEver);
+    
+    // Create a small overlay window with minimal decorations
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | 
+                                    ImGuiWindowFlags_AlwaysAutoResize | 
+                                    ImGuiWindowFlags_NoSavedSettings |
+                                    ImGuiWindowFlags_NoFocusOnAppearing |
+                                    ImGuiWindowFlags_NoNav;
+    
+    ImGui::Begin("FPS Counter", nullptr, window_flags);
+    ImGui::Text("FPS: %.1f", fps);
+    ImGui::Text("Frame Time: %.2f ms", frameTime * 1000.0);
+    ImGui::End();
+}
+
 void RenderLoop(GLFWwindow* window) {
     while (!glfwWindowShouldClose(window)) {
+        // Update FPS at the start of each frame
+        UpdateFPS();
 
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR) {
@@ -210,6 +251,9 @@ void RenderLoop(GLFWwindow* window) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // Display the FPS counter
+        RenderFPSCounter();
 
         PlanetUI::DrawMainControls(shape, [&]() {
             SetNoiseLayers(shape->noiseLayers);
