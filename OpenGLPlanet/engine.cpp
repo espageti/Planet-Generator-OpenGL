@@ -15,6 +15,11 @@ double currentFrameTime = 0.0;
 double frameTime = 0.0;
 double fps = 0.0;
 
+double fpsUpdateInterval = 0.5; // Update FPS display every half second
+double fpsUpdateTimer = 0.0;
+int frameCount = 0;
+double averageFps = 0.0;
+
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -10.0f);
@@ -127,11 +132,24 @@ void UpdateFPS() {
     // Calculate time since last frame
     frameTime = currentFrameTime - lastFrameTime;
     
-    // Calculate FPS (avoid division by zero)
-    fps = (frameTime > 0.0) ? (1.0 / frameTime) : 0.0;
-    
     // Update last frame time
     lastFrameTime = currentFrameTime;
+    
+    // Increment frame counter
+    frameCount++;
+    
+    // Update the timer
+    fpsUpdateTimer += frameTime;
+    
+    // Only update the displayed FPS every update interval
+    if (fpsUpdateTimer >= fpsUpdateInterval) {
+        // Calculate average FPS over the interval
+        averageFps = frameCount / fpsUpdateTimer;
+        
+        // Reset counters
+        frameCount = 0;
+        fpsUpdateTimer = 0.0;
+    }
 }
 
 void RenderFPSCounter() {
@@ -147,7 +165,7 @@ void RenderFPSCounter() {
                                     ImGuiWindowFlags_NoNav;
     
     ImGui::Begin("FPS Counter", nullptr, window_flags);
-    ImGui::Text("FPS: %.1f", fps);
+    ImGui::Text("FPS: %.1f", averageFps);
     ImGui::Text("Frame Time: %.2f ms", frameTime * 1000.0);
     ImGui::End();
 }
