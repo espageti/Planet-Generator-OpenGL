@@ -335,6 +335,9 @@ OpenGL_ROOT:PATH=C:/OpenGL
 //Use MSVC runtime library DLL
 USE_MSVC_RUNTIME_LIBRARY_DLL:BOOL=ON
 
+//Vendor directory
+VENDOR_DIR:PATH=C:/Users/darre/source/repos/OpenGLPlanet/OpenGLPlanet/vendor
+
 
 ########################
 # INTERNAL cache entries

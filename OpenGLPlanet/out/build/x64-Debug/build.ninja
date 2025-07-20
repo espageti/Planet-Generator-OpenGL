@@ -47,11 +47,11 @@ cmake_ninja_workdir = C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out
 #############################################
 # Order-only phony target for OpenGLPlanet
 
-build cmake_object_order_depends_target_OpenGLPlanet: phony || cmake_object_order_depends_target_glfw
+build cmake_object_order_depends_target_OpenGLPlanet: phony || cmake_object_order_depends_target_glad cmake_object_order_depends_target_glfw
 
 build CMakeFiles\OpenGLPlanet.dir\main.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\main.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -59,7 +59,7 @@ build CMakeFiles\OpenGLPlanet.dir\main.cpp.obj: CXX_COMPILER__OpenGLPlanet_unsca
 
 build CMakeFiles\OpenGLPlanet.dir\engine.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\engine.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -67,7 +67,7 @@ build CMakeFiles\OpenGLPlanet.dir\engine.cpp.obj: CXX_COMPILER__OpenGLPlanet_uns
 
 build CMakeFiles\OpenGLPlanet.dir\shader.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\shader.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -75,7 +75,7 @@ build CMakeFiles\OpenGLPlanet.dir\shader.cpp.obj: CXX_COMPILER__OpenGLPlanet_uns
 
 build CMakeFiles\OpenGLPlanet.dir\shapesettings.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\shapesettings.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -83,7 +83,7 @@ build CMakeFiles\OpenGLPlanet.dir\shapesettings.cpp.obj: CXX_COMPILER__OpenGLPla
 
 build CMakeFiles\OpenGLPlanet.dir\perlinNoiseFilter.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\perlinNoiseFilter.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -91,7 +91,7 @@ build CMakeFiles\OpenGLPlanet.dir\perlinNoiseFilter.cpp.obj: CXX_COMPILER__OpenG
 
 build CMakeFiles\OpenGLPlanet.dir\planetUI.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\planetUI.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -99,7 +99,7 @@ build CMakeFiles\OpenGLPlanet.dir\planetUI.cpp.obj: CXX_COMPILER__OpenGLPlanet_u
 
 build CMakeFiles\OpenGLPlanet.dir\sphere.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\sphere.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -107,7 +107,7 @@ build CMakeFiles\OpenGLPlanet.dir\sphere.cpp.obj: CXX_COMPILER__OpenGLPlanet_uns
 
 build CMakeFiles\OpenGLPlanet.dir\imgui\imgui.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui\imgui.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\imgui
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -115,7 +115,7 @@ build CMakeFiles\OpenGLPlanet.dir\imgui\imgui.cpp.obj: CXX_COMPILER__OpenGLPlane
 
 build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_demo.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui\imgui_demo.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\imgui
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -123,7 +123,7 @@ build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_demo.cpp.obj: CXX_COMPILER__OpenGL
 
 build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_draw.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui\imgui_draw.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\imgui
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -131,7 +131,7 @@ build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_draw.cpp.obj: CXX_COMPILER__OpenGL
 
 build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_glfw.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui\imgui_impl_glfw.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\imgui
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -139,7 +139,7 @@ build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_glfw.cpp.obj: CXX_COMPILER__O
 
 build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_opengl3.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui\imgui_impl_opengl3.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\imgui
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -147,7 +147,7 @@ build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_opengl3.cpp.obj: CXX_COMPILER
 
 build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_tables.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui\imgui_tables.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\imgui
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
@@ -155,17 +155,9 @@ build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_tables.cpp.obj: CXX_COMPILER__Open
 
 build CMakeFiles\OpenGLPlanet.dir\imgui\imgui_widgets.cpp.obj: CXX_COMPILER__OpenGLPlanet_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui\imgui_widgets.cpp || cmake_object_order_depends_target_OpenGLPlanet
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
+  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\imgui
-  TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
-  TARGET_PDB = OpenGLPlanet.pdb
-
-build CMakeFiles\OpenGLPlanet.dir\C_\OpenGL\src\glad.c.obj: C_COMPILER__OpenGLPlanet_unscanned_Debug C$:\OpenGL\src\glad.c || cmake_object_order_depends_target_OpenGLPlanet
-  FLAGS = /DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd
-  INCLUDES = -IC:\OpenGL\include -IC:\OpenGL -IC:\OpenGL\include\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\imgui -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug\_deps\glfw-src\include
-  OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
-  OBJECT_FILE_DIR = CMakeFiles\OpenGLPlanet.dir\C_\OpenGL\src
   TARGET_COMPILE_PDB = CMakeFiles\OpenGLPlanet.dir\
   TARGET_PDB = OpenGLPlanet.pdb
 
@@ -177,10 +169,10 @@ build CMakeFiles\OpenGLPlanet.dir\C_\OpenGL\src\glad.c.obj: C_COMPILER__OpenGLPl
 #############################################
 # Link the executable OpenGLPlanet.exe
 
-build OpenGLPlanet.exe: CXX_EXECUTABLE_LINKER__OpenGLPlanet_Debug CMakeFiles\OpenGLPlanet.dir\main.cpp.obj CMakeFiles\OpenGLPlanet.dir\engine.cpp.obj CMakeFiles\OpenGLPlanet.dir\shader.cpp.obj CMakeFiles\OpenGLPlanet.dir\shapesettings.cpp.obj CMakeFiles\OpenGLPlanet.dir\perlinNoiseFilter.cpp.obj CMakeFiles\OpenGLPlanet.dir\planetUI.cpp.obj CMakeFiles\OpenGLPlanet.dir\sphere.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_demo.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_draw.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_glfw.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_opengl3.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_tables.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_widgets.cpp.obj CMakeFiles\OpenGLPlanet.dir\C_\OpenGL\src\glad.c.obj | _deps\glfw-build\src\glfw3.lib || _deps\glfw-build\src\glfw3.lib
+build OpenGLPlanet.exe: CXX_EXECUTABLE_LINKER__OpenGLPlanet_Debug CMakeFiles\OpenGLPlanet.dir\main.cpp.obj CMakeFiles\OpenGLPlanet.dir\engine.cpp.obj CMakeFiles\OpenGLPlanet.dir\shader.cpp.obj CMakeFiles\OpenGLPlanet.dir\shapesettings.cpp.obj CMakeFiles\OpenGLPlanet.dir\perlinNoiseFilter.cpp.obj CMakeFiles\OpenGLPlanet.dir\planetUI.cpp.obj CMakeFiles\OpenGLPlanet.dir\sphere.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_demo.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_draw.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_glfw.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_impl_opengl3.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_tables.cpp.obj CMakeFiles\OpenGLPlanet.dir\imgui\imgui_widgets.cpp.obj | glad.lib _deps\glfw-build\src\glfw3.lib || _deps\glfw-build\src\glfw3.lib glad.lib
   FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MDd
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
-  LINK_LIBRARIES = _deps\glfw-build\src\glfw3.lib  opengl32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  LINK_LIBRARIES = glad.lib  _deps\glfw-build\src\glfw3.lib  opengl32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = CMakeFiles\OpenGLPlanet.dir
   POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\out\build\x64-Debug && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/darre/source/repos/OpenGLPlanet/OpenGLPlanet/out/build/x64-Debug/shaders/ && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_directory C:/Users/darre/source/repos/OpenGLPlanet/OpenGLPlanet/shaders C:/Users/darre/source/repos/OpenGLPlanet/OpenGLPlanet/out/build/x64-Debug/shaders"
   PRE_LINK = cd .
@@ -188,6 +180,41 @@ build OpenGLPlanet.exe: CXX_EXECUTABLE_LINKER__OpenGLPlanet_Debug CMakeFiles\Ope
   TARGET_FILE = OpenGLPlanet.exe
   TARGET_IMPLIB = OpenGLPlanet.lib
   TARGET_PDB = OpenGLPlanet.pdb
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target glad
+
+
+#############################################
+# Order-only phony target for glad
+
+build cmake_object_order_depends_target_glad: phony || .
+
+build CMakeFiles\glad.dir\vendor\glad\src\glad.c.obj: C_COMPILER__glad_unscanned_Debug C$:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\src\glad.c || cmake_object_order_depends_target_glad
+  FLAGS = /DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd
+  INCLUDES = -IC:\Users\darre\source\repos\OpenGLPlanet\OpenGLPlanet\vendor\glad\include
+  OBJECT_DIR = CMakeFiles\glad.dir
+  OBJECT_FILE_DIR = CMakeFiles\glad.dir\vendor\glad\src
+  TARGET_COMPILE_PDB = CMakeFiles\glad.dir\glad.pdb
+  TARGET_PDB = glad.pdb
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target glad
+
+
+#############################################
+# Link the static library glad.lib
+
+build glad.lib: C_STATIC_LIBRARY_LINKER__glad_Debug CMakeFiles\glad.dir\vendor\glad\src\glad.c.obj
+  LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd
+  LINK_FLAGS = /machine:x64
+  OBJECT_DIR = CMakeFiles\glad.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_COMPILE_PDB = CMakeFiles\glad.dir\glad.pdb
+  TARGET_FILE = glad.lib
+  TARGET_PDB = glad.pdb
 
 
 #############################################
@@ -2266,6 +2293,8 @@ build gears: phony _deps\glfw-build\examples\gears.exe
 
 build gears.exe: phony _deps\glfw-build\examples\gears.exe
 
+build glad: phony glad.lib
+
 build glfw: phony _deps\glfw-build\src\glfw3.lib
 
 build glfw3.lib: phony _deps\glfw-build\src\glfw3.lib
@@ -2370,7 +2399,7 @@ build windows.exe: phony _deps\glfw-build\tests\windows.exe
 #############################################
 # Folder: C:/Users/darre/source/repos/OpenGLPlanet/OpenGLPlanet/out/build/x64-Debug
 
-build all: phony OpenGLPlanet.exe _deps\glfw-build\all
+build all: phony OpenGLPlanet.exe glad.lib _deps\glfw-build\all
 
 # =============================================================================
 
