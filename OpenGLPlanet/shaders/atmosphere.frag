@@ -15,5 +15,5 @@ void main() {
     float fMiePhase = 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos*fCos) / pow(1.0 + g2 - 2.0*g*fCos, 1.5);
     
     float fRayleighPhase = 0.75 * (1.0 + fCos*fCos);
-    FragColor = rayleighColor + fMiePhase * mieColor;
+    FragColor = rayleighColor * fRayliehgPhase + fMiePhase * mieColor;
 }
