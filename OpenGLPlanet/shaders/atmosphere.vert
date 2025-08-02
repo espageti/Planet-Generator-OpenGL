@@ -20,7 +20,6 @@ uniform float fScale;
 uniform float fScaleDepth;
 uniform float fScaleOverScaleDepth;
 uniform float densityFalloff;
-uniform float debug0;
 
 out vec3 v3Direction;
 out vec4 rayleighColor;
@@ -30,25 +29,7 @@ const int nSamples = 16;
 const float fSamples = float(nSamples);
 
 
-// Near intersection of ray and sphere
-bool intersects(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2) {
-    float B = 2.0 * dot(v3Pos, v3Ray);
-    float C = fDistance2 - fRadius2;
-    float fDet = B * B - 4.0 * C;
-    
-    // No intersection if ray misses sphere
-    if (fDet < 0.0) return false;
-    
-    // Calculate both solutions
-    float sqrtDet = sqrt(fDet);
-    float t0 = 0.5 * (-B - sqrtDet);
-    float t1 = 0.5 * (-B + sqrtDet);
-    
-    // Only count as intersection if at least one solution is positive
-    return (t0 > 0.0) && (t1 > 0.0);
-}
-
-// Near intersection of ray and sphere
+// distance along ray to nearestw intersection point with sphere
 float getNearIntersection(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2) {
     float B = 2.0 * dot(v3Pos, v3Ray);
     float C = fDistance2 - fRadius2;
@@ -73,6 +54,7 @@ float densityAtPoint(vec3 densitySamplePoint)
     return localDensity;
 }
 
+// Calculate the totla optical depth along a ray
 float opticalDepth(vec3 rayOrigin, vec3 rayDir, float rayLength)
 {
     vec3 densitySamplePoint = rayOrigin;
@@ -104,9 +86,6 @@ void main(void) {
         fNear = 0;
     }
     vec3 v3Start = v3CameraPos + v3Ray * fNear;
-    float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
-    float fStartDepth = exp(-1.0 / fScaleDepth);
-    float x = fStartAngle;
     
     
     vec3 v3FrontColor = vec3(0.0, 0.0, 0.0);
@@ -120,15 +99,17 @@ void main(void) {
     }
     for(int i = 0; i < nSamples; i++) {
         vec3 sunDir = normalize(v3LightPos);
-    
+        
+        // total distance the sun travels through the atmosphere
         float fSunRayLength = getFarIntersection(v3SamplePoint, sunDir,
                                                dot(v3SamplePoint, v3SamplePoint),
                                                fOuterRadius2);
-        // total amount of shit in the way, between here and the sun, basically.
-        float fSunRayDepth = opticalDepth(v3SamplePoint, sunDir, fSunRayLength);
+        
+        // total optical depth along the ray 
+        float sunRayOpticalDepth = opticalDepth(samplePoint, sunDirection, sunRayLength);
         float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, length(v3SamplePoint - v3CameraPos) - fNear);
     
-        vec3 transmittance = exp((-fSunRayDepth - fViewRayDepth) * v3InvWavelength);
+        vec3 transmittance = exp((-sunRayOpticalDepth - fViewRayDepth) * v3InvWavelength);
         float localDensity = densityAtPoint(v3SamplePoint);
     
         v3FrontColor += localDensity * transmittance * stepSize * v3InvWavelength;
@@ -136,13 +117,8 @@ void main(void) {
     }
     v3Direction = normalize(v3CameraPos - v3Pos);
 
-    //for (int i = 0; i < 3; i++)
-    //{
-    //    mieColor[i] = fKmESun * debug0 * v3FrontColor[i];
-    //    rayleighColor[i] = fKrESun * debug0 *  v3FrontColor[i]; //idk what kinda, but this looks fine
-    //}
-    mieColor.rgb = fKmESun * debug0  * v3FrontColor;
-    rayleighColor.rgb = fKrESun * debug0 * v3FrontColor;
+    mieColor.rgb = fKmESun * v3FrontColor;
+    rayleighColor.rgb = fKrESun * v3FrontColor;
 
     gl_Position = projection * view * vec4(v3Pos, 1.0);
 }

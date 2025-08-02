@@ -60,7 +60,6 @@ float atmosphereThickness = 0.25;
 
 float m_fWavelength[3];
 float m_fWavelength4[3];
-float debug0 = 1.0;
 
 const float PI = 3.14159;
 const int m_nSamples = 3;		// Number of sample rays to use in integral equation
@@ -246,7 +245,6 @@ void RenderLoop(GLFWwindow* window) {
 
             atmosphereShader->setFloat("densityFalloff", densityFalloff);
 
-            atmosphereShader->setFloat("debug0", debug0);
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE);
