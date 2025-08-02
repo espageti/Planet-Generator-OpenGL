@@ -23,7 +23,7 @@ double averageFps = 0.0;
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -10.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction the camera is facing
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);  // Direction the camera is facing
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 //tangent to the sphere where the player is standing, should be identity when not in first person mode
 glm::mat3 cameraBasis = glm::mat3(
@@ -190,19 +190,16 @@ void RenderLoop(GLFWwindow* window) {
             cameraPos = glm::vec3(rotation * glm::vec4(cameraPos, 1.0));
              // Ensure direction is unit length
             cameraUp = glm::normalize(cameraUp);
-        }
-        if (firstPersonMode)
-        {
-
             glm::vec3 up = normalize(cameraPos);
-            glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0])); //gotta make it negative again, to cancel out when I made right negative
+            glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0]));
             glm::vec3 right = -normalize(cross(forward, up));
             cameraBasis[0] = right;
             cameraBasis[1] = up;
             cameraBasis[2] = forward;
+
+            std::cout << forward.x << " " << forward.y << " " << forward.z << std::endl;
         }
         glm::vec3 front = cameraBasis * glm::normalize(cameraFront);
-        std::cout << cameraFront.x << " " << cameraFront.y << " " << cameraFront.z << std::endl;
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + front, cameraUp);
 
         model = rotation * model;
@@ -418,7 +415,6 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 
-    
     // Update camera front vector
     glm::vec3 direction;
     direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -426,7 +422,6 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront =  glm::normalize(direction);
     cameraUp = cameraBasis * glm::vec3(0, 1, 0);
-    
 }
 
 void Cleanup() {
