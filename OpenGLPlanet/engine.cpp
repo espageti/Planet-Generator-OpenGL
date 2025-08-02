@@ -291,6 +291,8 @@ void RenderLoop(GLFWwindow* window) {
 void SetNoiseLayers(const std::vector<NoiseLayer*> layers) {
     planetShader->enable();
 
+    planetShader->setFloat("seed", shape->seed);
+
     for (int i = 0; i < layers.size() && i < 8; i++) {
         const NoiseLayer* layer = layers[i];
         std::string base = "noiseLayers[" + std::to_string(i) + "]";

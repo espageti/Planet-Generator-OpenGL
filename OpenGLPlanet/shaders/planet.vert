@@ -39,7 +39,8 @@ float EvaluateNoise(vec3 pointOnUnitSphere) {
     return elevation;
 }
 
-// Estimate normal via spherical finite difference (no longer using this)
+// Estimate normal via spherical finite difference 
+// (no longer using this, currently calculating per-face normal in geometry shader)
 vec3 ComputeNoiseNormal(vec3 unitSpherePos) {
     const float eps = 0.001;
 

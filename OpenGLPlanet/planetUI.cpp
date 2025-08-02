@@ -128,6 +128,11 @@ namespace PlanetUI {
         ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.0, 3.0f);
         ImGui::SliderFloat("Density Falloff", &densityFalloff, 0.0, 30.0f);
         
+        bool seedChanged = ImGui::SliderFloat("Terrain Seed", &shape->seed, 0.0f, 100.0f);
+        if (seedChanged && autoRegen) {
+            onRegenerate();
+        }
+        
         ImGui::Checkbox("Atmosphere", &atmosphereEnabled);
         ImGui::Checkbox("First Person", &firstPersonMode);
         bool update = DrawNoiseLayerControls(shape);

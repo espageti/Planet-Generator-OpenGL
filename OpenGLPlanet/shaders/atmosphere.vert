@@ -28,6 +28,22 @@ out vec4 mieColor;
 const int nSamples = 16;
 const float fSamples = float(nSamples);
 
+bool intersects(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2) {
+    float B = 2.0 * dot(v3Pos, v3Ray);
+    float C = fDistance2 - fRadius2;
+    float fDet = B * B - 4.0 * C;
+    
+    // No intersection if ray misses sphere
+    if (fDet < 0.0) return false;
+    
+    // Calculate both solutions
+    float sqrtDet = sqrt(fDet);
+    float t0 = 0.5 * (-B - sqrtDet);
+    float t1 = 0.5 * (-B + sqrtDet);
+    
+    // Only count as intersection if at least one solution is positive
+    return (t0 > 0.0) && (t1 > 0.0);
+}
 
 // distance along ray to nearestw intersection point with sphere
 float getNearIntersection(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2) {
@@ -76,9 +92,11 @@ void main(void) {
     
     vec3 v3Ray = normalize(v3LookDisplacement);
     float fFar = getFarIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
+
+    // If the ray intersects the planet, set fFar to the intersection point
     if(intersects(v3CameraPos, v3Ray, fCameraHeight2, fInnerRadius2))
     {
-        fFar = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fInnerRadius2);
+        fFar =  getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fInnerRadius2);
     }
     float fNear = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
     if(fNear < 0)
@@ -100,13 +118,13 @@ void main(void) {
     for(int i = 0; i < nSamples; i++) {
         vec3 sunDir = normalize(v3LightPos);
         
-        // total distance the sun travels through the atmosphere
+        v3SamplePoint += sunDir * 0.001;
         float fSunRayLength = getFarIntersection(v3SamplePoint, sunDir,
                                                dot(v3SamplePoint, v3SamplePoint),
                                                fOuterRadius2);
         
         // total optical depth along the ray 
-        float sunRayOpticalDepth = opticalDepth(samplePoint, sunDirection, sunRayLength);
+        float sunRayOpticalDepth = opticalDepth(v3SamplePoint, sunDir, fSunRayLength);
         float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, length(v3SamplePoint - v3CameraPos) - fNear);
     
         vec3 transmittance = exp((-sunRayOpticalDepth - fViewRayDepth) * v3InvWavelength);
