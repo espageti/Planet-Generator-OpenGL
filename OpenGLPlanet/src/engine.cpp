@@ -62,7 +62,7 @@ float m_fWavelength[3];
 float m_fWavelength4[3];
 
 const float PI = 3.14159;
-const int m_nSamples = 3;		// Number of sample rays to use in integral equation
+const int nSamples = 16;		// Number of sample rays to use in integral equation
 const float m_Kr = 0.0025f;		// Rayleigh scattering constant
 const float m_Kr4PI = m_Kr * 4.0f * PI;
 const float m_Km = 0.0010f;		// Mie scattering constant
@@ -227,12 +227,13 @@ void RenderLoop(GLFWwindow* window) {
             atmosphereShader->setMat4("model", model);
             atmosphereShader->setMat4("view", view);
             atmosphereShader->setMat4("projection", projection);
+			atmosphereShader->setInt("nSamples", nSamples);
             atmosphereShader->setVec3("v3CameraPos", cameraPos);
             atmosphereShader->setVec3("v3LightPos", lightPos / glm::length(lightPos));
 			atmosphereShader->setVec3("v3LightColor", lightColor);
             atmosphereShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
             float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
-            atmosphereShader->setVec3("v3SunlightIntensity", glm::vec3(1, 0, 0));
+            atmosphereShader->setVec3("v3SunlightIntensity", glm::vec3(1, 1, 1));
             atmosphereShader->setFloat("fCameraHeight", cameraHeight);
             atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
             float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);

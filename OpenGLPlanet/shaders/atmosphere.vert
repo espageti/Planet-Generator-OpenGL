@@ -26,8 +26,8 @@ out vec3 v3Direction;
 out vec4 rayleighColor;
 out vec4 mieColor;
 
-const int nSamples = 16;
-const float fSamples = float(nSamples);
+uniform int nSamples;
+float fSamples = float(nSamples);
 
 bool intersects(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2) {
     float B = 2.0 * dot(v3Pos, v3Ray);
