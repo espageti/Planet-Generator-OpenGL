@@ -191,6 +191,16 @@ void RenderLoop(GLFWwindow* window) {
              // Ensure direction is unit length
             cameraUp = glm::normalize(cameraUp);
         }
+        if (firstPersonMode)
+        {
+
+            glm::vec3 up = normalize(cameraPos);
+            glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0])); //gotta make it negative again, to cancel out when I made right negative
+            glm::vec3 right = -normalize(cross(forward, up));
+            cameraBasis[0] = right;
+            cameraBasis[1] = up;
+            cameraBasis[2] = forward;
+        }
         glm::vec3 front = cameraBasis * glm::normalize(cameraFront);
         std::cout << cameraFront.x << " " << cameraFront.y << " " << cameraFront.z << std::endl;
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + front, cameraUp);
@@ -408,16 +418,7 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 
-    if (firstPersonMode)
-    {
-
-        glm::vec3 up = normalize(cameraPos);
-        glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0])); //gotta make it negative again, to cancel out when I made right negative
-        glm::vec3 right = -normalize(cross(forward, up));
-        cameraBasis[0] = right;
-        cameraBasis[1] = up;
-        cameraBasis[2] = forward;
-    }
+    
     // Update camera front vector
     glm::vec3 direction;
     direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
