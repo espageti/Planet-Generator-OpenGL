@@ -6,13 +6,13 @@ set(OpenGL_ROOT "C:/OpenGL" CACHE PATH "Root directory for OpenGL/ImGui installa
 set(VENDOR_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor" CACHE PATH "Vendor directory")
 
 set(SOURCES
-    main.cpp
-    engine.cpp
-    shader.cpp
-    shapesettings.cpp
-    perlinNoiseFilter.cpp
-    planetUI.cpp
-    sphere.cpp
+    src/main.cpp
+    src/engine.cpp
+    src/shader.cpp
+    src/shapesettings.cpp
+    src/perlinNoiseFilter.cpp
+    src/planetUI.cpp
+    src/sphere.cpp
     imgui/imgui.cpp
     imgui/imgui_demo.cpp
     imgui/imgui_draw.cpp
