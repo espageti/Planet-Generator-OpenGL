@@ -105,7 +105,8 @@ void Init(GLFWwindow* window) {
     // Load shader
     planetShader = new Shader("shaders/planet.vert", "shaders/planet.frag", "shaders/planet.geom" );
     planetShader->enable();
-    planetShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	std::cout << "light color: " << lightColor.x << " " << lightColor.y << " " << lightColor.z << std::endl;
+    planetShader->setVec3("lightColor", lightColor);
     planetShader->setFloat("maxElevation", atmosphereThickness);
 
 
@@ -209,6 +210,8 @@ void RenderLoop(GLFWwindow* window) {
 
         planetShader->setVec3("lightPos", lightPos);
         planetShader->setVec3("viewPos", cameraPos);
+        std::cout << "light color: " << lightColor.x << " " << lightColor.y << " " << lightColor.z << std::endl;
+        planetShader->setVec3("lightColor", lightColor);
         // Draw mesh
         planet.Draw();
 
@@ -226,6 +229,7 @@ void RenderLoop(GLFWwindow* window) {
             atmosphereShader->setMat4("projection", projection);
             atmosphereShader->setVec3("v3CameraPos", cameraPos);
             atmosphereShader->setVec3("v3LightPos", lightPos / glm::length(lightPos));
+			atmosphereShader->setVec3("v3LightColor", lightColor);
             atmosphereShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
             float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
             atmosphereShader->setVec3("v3SunlightIntensity", glm::vec3(1, 0, 0));

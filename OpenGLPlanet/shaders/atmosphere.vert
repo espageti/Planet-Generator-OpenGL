@@ -6,6 +6,7 @@ uniform vec3 v3CameraPos;
 uniform vec3 v3LightPos;
 uniform vec3 v3InvWavelength;
 uniform vec3 v3SunlightIntensity;
+uniform vec3 v3LightColor; 
 uniform float fCameraHeight;
 uniform float fCameraHeight2;
 uniform float fOuterRadius;
@@ -135,8 +136,8 @@ void main(void) {
     }
     v3Direction = normalize(v3CameraPos - v3Pos);
 
-    mieColor.rgb = fKmESun * v3FrontColor;
-    rayleighColor.rgb = fKrESun * v3FrontColor;
+    mieColor.rgb = fKmESun * v3FrontColor * v3LightColor;
+    rayleighColor.rgb = fKrESun * v3FrontColor * v3LightColor;
 
     gl_Position = projection * view * vec4(v3Pos, 1.0);
 }
