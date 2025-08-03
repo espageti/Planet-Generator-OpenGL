@@ -21,10 +21,18 @@ A real time, GPU-accelerated procedural planet generator built with **OpenGL**, 
 ## Controls
 Look around with mouse, move around with WASD
 
+## Prerequisites
+CMake (version 3.15 or newer recommended)
 
-## Build Instructions (Visual Studio 2022)
-1. Clone the repo
-2. Open .sln file in Visual Studio 2022
-3. Link against glfw3, opengl32, and glad
-4. Include directories for GLFW, GLAD, and Dear ImGUI
-5. Build and run project
+A C++ compiler (e.g., MSVC on Windows, gcc or clang on Linux/macOS)
+
+(Optional) vcpkg if you use it for dependencies
+
+Build Instructions
+Open a terminal or command prompt, then run the following commands from the root directory of the project:
+
+# Create a separate build directory
+cmake -S . -B build
+
+# Build the project using the generated build system
+cmake --build build
