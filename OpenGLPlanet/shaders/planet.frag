@@ -6,10 +6,19 @@ in vec3 gPosition;
 in float gElevation;
 in vec3 gUnitSpherePos;
 
+
 uniform vec3 v3LightPos;  
 uniform vec3 v3LightColor;
 uniform vec3 v3CameraPos;
 uniform float maxElevation;
+
+//atmosphere stuff
+in vec3 gDirection;
+in vec4 gRayleighColor;
+in vec4 gMieColor;
+uniform float g;
+uniform float g2;
+
 #include "biomeDefs.glsl"
 #include "noise.glsl"
 
@@ -40,7 +49,12 @@ void main() {
     float humidity = (GenerateNoise(gUnitSpherePos, 2.1, 0.4, 4, 2.5, 0.5) * 0.5 + 0.5) - abs(gUnitSpherePos.y)/2.4; 
     
     vec3 vBiomeColor = calculateFinalBiomeColor(temp, humidity, gElevation / maxElevation, gUnitSpherePos); // in biomeDefs.glsl
+    float fCos = dot(normalize(v3LightPos), normalize(gDirection));
 
+    float fMiePhase = 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos*fCos) / pow(1.0 + g2 - 2.0*g*fCos, 1.5);
     
-    FragColor = vec4(vBiomeColor * phong, 1) ;
+    float fRayleighPhase = 0.75 * (1.0 + fCos*fCos);
+    vec4 atmospheric = gRayleighColor * fRayleighPhase + fMiePhase * gMieColor;
+    vec4 realColor = vec4(vBiomeColor * phong, 1);
+    FragColor = realColor * atmospheric + atmospheric * 0.5 + realColor * 0.4; // Add a bit of atmosphere to the final color
 }

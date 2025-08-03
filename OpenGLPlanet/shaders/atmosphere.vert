@@ -5,8 +5,6 @@ uniform mat4 model, projection, view;
 
 #include "common.vert"
 
-
-
 void main(void) {
     vec3 v3Pos = (model * vec4(aPos, 1.0)).xyz;
     
