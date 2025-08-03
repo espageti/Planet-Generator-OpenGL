@@ -32,4 +32,5 @@ Build Instructions
 Open a terminal or command prompt, then run the following commands from the root directory of the project:
 
 cmake -S . -B build
+
 cmake --build build
