@@ -65,13 +65,13 @@ float densityAtPoint(vec3 densitySamplePoint)
     return localDensity;
 }
 
-// Calculate the totla optical depth along a ray
+// Calculate the totla optical depth along a ray (how much light would be scattered or absorbed))
 float opticalDepth(vec3 rayOrigin, vec3 rayDir, float rayLength)
 {
     vec3 densitySamplePoint = rayOrigin;
     float stepSize = rayLength / (nSamples - 1);
     float opticalDepth = 0;
-    for (int i = 0; i < nSamples; i++)
+    for (int i = 0; i < 10; i++)
     {
         float localDensity = densityAtPoint(densitySamplePoint);
         opticalDepth += localDensity * stepSize;
@@ -119,8 +119,11 @@ void setScattering(vec3 v3Pos)
                                                dot(v3SamplePoint, v3SamplePoint),
                                                atmosphereRadius2);
         
-        // total optical depth along the ray 
+        // total optical depth between sun and sample point 
+        // used to calculate how much light would get scattered by the atmosphere going from sun to sample point
         float sunRayOpticalDepth = opticalDepth(v3SamplePoint, sunDir, fSunRayLength);
+        // total optical depth between camera and sample point
+        // used  to calculate how much light would be scattered by the atmosphere going from sample point to camera
         float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, length(v3SamplePoint - cameraPos) - fNear);
     
         vec3 transmittance = exp((-sunRayOpticalDepth - fViewRayDepth) * invWavelength4);
