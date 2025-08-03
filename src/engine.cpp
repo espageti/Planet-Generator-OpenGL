@@ -67,7 +67,7 @@ const float kRayleigh = 0.0025f;		// Rayleigh scattering constant
 const float kRayleigh4PI = kRayleigh * 4.0f * PI;
 const float kMie = 0.0010f;		// Mie scattering constant
 const float kMie4PI = kMie * 4.0f * PI;
-const float sunBrightness = 300.0f;		// Sun brightness constant
+const float sunBrightness = 200.0f;		// Sun brightness constant
 const float gMie = -0.990f;		// The Mie phase asymmetry factor
 const float exposure = 2.0f;
 

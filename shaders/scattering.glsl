@@ -21,7 +21,7 @@ out vec4 mieColor;
 
 float fSamples = float(nSamples);
 
-
+const int depthSamples = 10; // Number of samples to take along the ray for optical depth calculation
 
 bool intersects(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2) {
     float B = 2.0 * dot(v3Pos, v3Ray);
@@ -71,7 +71,7 @@ float opticalDepth(vec3 rayOrigin, vec3 rayDir, float rayLength)
     vec3 densitySamplePoint = rayOrigin;
     float stepSize = rayLength / (nSamples - 1);
     float opticalDepth = 0;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < depthSamples; i++)
     {
         float localDensity = densityAtPoint(densitySamplePoint);
         opticalDepth += localDensity * stepSize;
