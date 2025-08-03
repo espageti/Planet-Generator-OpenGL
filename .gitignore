@@ -4,6 +4,9 @@ Release/
 x64/
 x86/
 .vs/
+/out/
+/out/build/
+/out/build/*
 
 # === CMake build system ===
 build/
