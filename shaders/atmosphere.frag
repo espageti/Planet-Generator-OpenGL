@@ -3,6 +3,8 @@
 uniform vec3 v3LightPos;
 uniform float g;
 uniform float g2;
+uniform float exposure;
+
 
 in vec3 v3Direction;
 in vec4 rayleighColor;
@@ -15,5 +17,6 @@ void main() {
     float fMiePhase = 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos*fCos) / pow(1.0 + g2 - 2.0*g*fCos, 1.5);
     
     float fRayleighPhase = 0.75 * (1.0 + fCos*fCos);
-    FragColor = rayleighColor * fRayleighPhase + fMiePhase * mieColor;
+    vec4 combinedColor = rayleighColor * fRayleighPhase + fMiePhase * mieColor;
+    FragColor = 1.0 -  exp(combinedColor * -exposure);
 }

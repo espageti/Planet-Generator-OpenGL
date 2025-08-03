@@ -11,6 +11,7 @@ uniform vec3 v3LightPos;
 uniform vec3 v3LightColor;
 uniform vec3 v3CameraPos;
 uniform float maxElevation;
+uniform float exposure;
 
 //atmosphere stuff
 in vec3 gDirection;
@@ -56,5 +57,6 @@ void main() {
     float fRayleighPhase = 0.75 * (1.0 + fCos*fCos);
     vec4 atmospheric = gRayleighColor * fRayleighPhase + fMiePhase * gMieColor;
     vec4 realColor = vec4(vBiomeColor * phong, 1);
-    FragColor = realColor * atmospheric * 0.6 + atmospheric * 0.1 + realColor * 0.4; // Add a bit of atmosphere to the final color
+    vec4 combinedColor = realColor * atmospheric * 0.6 + atmospheric * 0.1 + realColor * 0.4;
+    FragColor = 1.0 -  exp(combinedColor * -exposure); // Add a bit of atmosphere to the final color
 }

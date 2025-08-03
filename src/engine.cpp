@@ -63,13 +63,13 @@ float m_fWavelength4[3];
 
 const float PI = 3.14159;
 const int nSamples = 16;		// Number of sample rays to use in integral equation
-const float m_Kr = 0.0025f;		// Rayleigh scattering constant
-const float m_Kr4PI = m_Kr * 4.0f * PI;
-const float m_Km = 0.0010f;		// Mie scattering constant
-const float m_Km4PI = m_Km * 4.0f * PI;
-const float m_ESun = 300.0f;		// Sun brightness constant
-const float m_g = -0.990f;		// The Mie phase asymmetry factor
-const float m_fExposure = 2.0f;
+const float kRayleigh = 0.0025f;		// Rayleigh scattering constant
+const float kRayleigh4PI = kRayleigh * 4.0f * PI;
+const float kMie = 0.0010f;		// Mie scattering constant
+const float kMie4PI = kMie * 4.0f * PI;
+const float sunBrightness = 300.0f;		// Sun brightness constant
+const float gMie = -0.990f;		// The Mie phase asymmetry factor
+const float exposure = 2.0f;
 
 
 const float scatterStrength = 20;
@@ -226,19 +226,21 @@ void RenderLoop(GLFWwindow* window) {
         planetShader->setFloat("fInnerRadius", planetRadius);
         planetShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
 
-        planetShader->setFloat("fKrESun", m_Kr * m_ESun);
-        planetShader->setFloat("fKmESun", m_Km * m_ESun);
-        planetShader->setFloat("fKr4PI", m_Kr4PI);
-        planetShader->setFloat("fKm4PI", m_Km4PI);
+        planetShader->setFloat("fKrESun", kRayleigh * sunBrightness);
+        planetShader->setFloat("fKmESun", kMie * sunBrightness);
+        planetShader->setFloat("fKr4PI", kRayleigh4PI);
+        planetShader->setFloat("fKm4PI", kMie4PI);
         float scale = 1 / (atmosphereRadius - planetRadius);
         planetShader->setFloat("fScale", scale);
         planetShader->setFloat("fScaleDepth", 0.25);
         planetShader->setFloat("fScaleOverScaleDepth", scale / 0.25);
-        float m_g = -0.990f;		// The Mie phase asymmetry factor
-        planetShader->setFloat("g", m_g);
-        planetShader->setFloat("g2", m_g * m_g);
+        float gMie = -0.990f;		// The Mie phase asymmetry factor
+        planetShader->setFloat("g", gMie);
+        planetShader->setFloat("g2", gMie * gMie);
 
         planetShader->setFloat("densityFalloff", densityFalloff);
+
+        planetShader->setFloat("exposure", exposure);
         // Draw mesh
         planet.Draw();
 
@@ -270,20 +272,21 @@ void RenderLoop(GLFWwindow* window) {
             atmosphereShader->setFloat("fInnerRadius", planetRadius);
             atmosphereShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
 
-            atmosphereShader->setFloat("fKrESun", m_Kr * m_ESun);
-            atmosphereShader->setFloat("fKmESun", m_Km * m_ESun);
-            atmosphereShader->setFloat("fKr4PI", m_Kr4PI);
-            atmosphereShader->setFloat("fKm4PI", m_Km4PI);
+            atmosphereShader->setFloat("fKrESun", kRayleigh * sunBrightness);
+            atmosphereShader->setFloat("fKmESun", kMie * sunBrightness);
+            atmosphereShader->setFloat("fKr4PI", kRayleigh4PI);
+            atmosphereShader->setFloat("fKm4PI", kMie4PI);
             float scale = 1 / (atmosphereRadius - planetRadius);
             atmosphereShader->setFloat("fScale", scale);
             atmosphereShader->setFloat("fScaleDepth", 0.25);
             atmosphereShader->setFloat("fScaleOverScaleDepth", scale / 0.25);
-            float m_g = -0.990f;		// The Mie phase asymmetry factor
-            atmosphereShader->setFloat("g", m_g);
-            atmosphereShader->setFloat("g2", m_g * m_g);
+            float gMie = -0.990f;		// The Mie phase asymmetry factor
+            atmosphereShader->setFloat("g", gMie);
+            atmosphereShader->setFloat("g2", gMie * gMie);
 
             atmosphereShader->setFloat("densityFalloff", densityFalloff);
 
+            atmosphereShader->setFloat("exposure", exposure);
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE);
