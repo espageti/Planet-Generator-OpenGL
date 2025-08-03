@@ -64,9 +64,9 @@ float invWavelength4[3];
 const float PI = 3.14159;
 const int nSamples = 16;		// Number of sample rays to use in integral equation
 const float kRayleigh = 0.0025f;		// Rayleigh scattering constant
-const float kRayleigh4PI = kRayleigh * 4.0f * PI;
+
 const float kMie = 0.0010f;		// Mie scattering constant
-const float kMie4PI = kMie * 4.0f * PI;
+
 const float sunBrightness = 200.0f;		// Sun brightness constant
 const float gMie = -0.990f;		// The Mie phase asymmetry factor
 const float exposure = 2.0f;
@@ -94,13 +94,6 @@ void Init(GLFWwindow* window) {
     // Set background color
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-    // Set viewport and projection matrix
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    float aspect = static_cast<float>(width) / static_cast<float>(height);
-    projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
-    model = glm::mat4(1.0f);
-    glViewport(0, 0, width, height);
 
     // Load shader
     planetShader = new Shader("shaders/planet.vert", "shaders/planet.frag", "shaders/planet.geom" );
@@ -172,6 +165,16 @@ void RenderFPSCounter() {
 
 void RenderLoop(GLFWwindow* window) {
     while (!glfwWindowShouldClose(window)) {
+
+
+        // Set viewport and projection matrix
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        float aspect = static_cast<float>(width) / static_cast<float>(height);
+        projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
+        model = glm::mat4(1.0f);
+        glViewport(0, 0, width, height);
+
         // Update FPS at the start of each frame
         UpdateFPS();
 
@@ -269,8 +272,6 @@ void RenderLoop(GLFWwindow* window) {
 
             atmosphereShader->setFloat("kRayleighSunBrightness", kRayleigh * sunBrightness);
             atmosphereShader->setFloat("kMieSunBrightness", kMie * sunBrightness);
-            atmosphereShader->setFloat("kRayleigh4PI", kRayleigh4PI);
-            atmosphereShader->setFloat("fKm4PI", kMie4PI);
             float scale = 1 / (atmosphereRadius - planetRadius);
             atmosphereShader->setFloat("scale", scale);
 			atmosphereShader->setFloat("scaleDepth", 0.25); // the average density is found 25% of the way from ground to atmosphere
