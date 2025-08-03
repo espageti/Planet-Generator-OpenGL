@@ -21,6 +21,7 @@ out vec3 vPosition;
 out float vElevation;
 out vec3 vUnitSpherePos;
 #include "noise.glsl"
+#include "common.vert"
 
 // Evaluate layered noise on unit sphere
 float EvaluateNoise(vec3 pointOnUnitSphere) {
@@ -68,6 +69,7 @@ void main() {
     vElevation = EvaluateNoise(unitSpherePos);
     vec3 worldPos = (model * vec4(aPos * (1.0 + vElevation), 1.0)).xyz;
 
+    setScattering(worldPos); // found in common.vert
 
     vPosition = worldPos;
     gl_Position = projection * view * vec4(worldPos, 1.0);

@@ -209,9 +209,36 @@ void RenderLoop(GLFWwindow* window) {
         planetShader->setMat4("projection", projection);
 
         planetShader->setVec3("lightPos", lightPos);
-        planetShader->setVec3("viewPos", cameraPos);
-        std::cout << "light color: " << lightColor.x << " " << lightColor.y << " " << lightColor.z << std::endl;
-        planetShader->setVec3("lightColor", lightColor);
+
+        planetShader->setInt("nSamples", nSamples);
+        planetShader->setVec3("v3CameraPos", cameraPos);
+        planetShader->setVec3("v3LightPos", lightPos);
+        planetShader->setVec3("v3LightColor", lightColor);
+        planetShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
+        float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
+        planetShader->setVec3("v3SunlightIntensity", glm::vec3(1, 1, 1));
+        planetShader->setFloat("fCameraHeight", cameraHeight);
+        planetShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
+        float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);
+        planetShader->setFloat("fOuterRadius", atmosphereRadius);
+        planetShader->setFloat("fOuterRadius2", atmosphereRadius * atmosphereRadius);
+        float planetRadius = shape->radius;
+        planetShader->setFloat("fInnerRadius", planetRadius);
+        planetShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
+
+        planetShader->setFloat("fKrESun", m_Kr * m_ESun);
+        planetShader->setFloat("fKmESun", m_Km * m_ESun);
+        planetShader->setFloat("fKr4PI", m_Kr4PI);
+        planetShader->setFloat("fKm4PI", m_Km4PI);
+        float scale = 1 / (atmosphereRadius - planetRadius);
+        planetShader->setFloat("fScale", scale);
+        planetShader->setFloat("fScaleDepth", 0.25);
+        planetShader->setFloat("fScaleOverScaleDepth", scale / 0.25);
+        float m_g = -0.990f;		// The Mie phase asymmetry factor
+        planetShader->setFloat("g", m_g);
+        planetShader->setFloat("g2", m_g * m_g);
+
+        planetShader->setFloat("densityFalloff", densityFalloff);
         // Draw mesh
         planet.Draw();
 
