@@ -6,6 +6,7 @@ struct ShapeSettings {
     float radius = 1.0f;
     int resolution = 40;
     std::vector<NoiseLayer*> noiseLayers;
+    float seed = 0.0f; 
 
     ShapeSettings() = default;
 
@@ -15,7 +16,7 @@ struct ShapeSettings {
 
     std::string Serialize() {
         std::ostringstream ss;
-        ss << radius << " " << noiseLayers.size() << "\n";
+        ss << radius << " " << noiseLayers.size() << " " << seed << "\n"; 
         for (auto layer : noiseLayers) {
             ss << layer->Serialize() << "\n";
         }
@@ -25,7 +26,7 @@ struct ShapeSettings {
     void Deserialize(const std::string& data) {
         std::istringstream ss(data);
         size_t layerCount;
-        ss >> radius >> layerCount;
+        ss >> radius >> layerCount >> seed; // Read seed from deserialization
 
         // Clear existing layers
         for (auto layer : noiseLayers) delete layer;

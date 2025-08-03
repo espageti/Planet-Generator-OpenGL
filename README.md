@@ -19,12 +19,26 @@ A real time, GPU-accelerated procedural planet generator built with **OpenGL**, 
 - **Dear ImGui**
 
 ## Controls
-Look around with mouse, move around with WASD
+Look around with mouse, move around with WASD. Press Escape to interact with settings menu.
 
+## Prerequisites
+CMake (version 3.15 or newer recommended)
 
-## Build Instructions (Visual Studio 2022)
-1. Clone the repo
-2. Open .sln file in Visual Studio 2022
-3. Link against glfw3, opengl32, and glad
-4. Include directories for GLFW, GLAD, and Dear ImGUI
-5. Build and run project
+A C++ compiler (e.g., MSVC on Windows, gcc or clang on Linux/macOS)
+
+(Optional) vcpkg if you use it for dependencies
+
+## Build Instructions
+Open a terminal or command prompt, then run the following commands from the root directory of the project:
+
+cmake -S . -B build
+
+cmake --build build
+
+## Author Contributions
+
+This project was fully designed and implemented by me, Darren Lin.
+
+I built the procedural mesh generation, noise layering system, GLSL shaders for terrain and atmosphere rendering, interactive camera, and the ImGui-based UI. All code in the `src/` and `shaders/` folders is my own work.
+
+Third-party libraries (ImGui, GLFW, GLAD, GLM) are used under their respective licenses and credited to their original authors.

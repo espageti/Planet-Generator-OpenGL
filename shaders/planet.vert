@@ -21,6 +21,7 @@ out vec3 vPosition;
 out float vElevation;
 out vec3 vUnitSpherePos;
 #include "noise.glsl"
+#include "scattering.glsl"
 
 // Evaluate layered noise on unit sphere
 float EvaluateNoise(vec3 pointOnUnitSphere) {
@@ -39,7 +40,8 @@ float EvaluateNoise(vec3 pointOnUnitSphere) {
     return elevation;
 }
 
-// Estimate normal via spherical finite difference (no longer using this)
+// Estimate normal via spherical finite difference 
+// (no longer using this, currently calculating per-face normal in geometry shader)
 vec3 ComputeNoiseNormal(vec3 unitSpherePos) {
     const float eps = 0.001;
 
@@ -67,6 +69,7 @@ void main() {
     vElevation = EvaluateNoise(unitSpherePos);
     vec3 worldPos = (model * vec4(aPos * (1.0 + vElevation), 1.0)).xyz;
 
+    setScattering(worldPos); // found in common.vert
 
     vPosition = worldPos;
     gl_Position = projection * view * vec4(worldPos, 1.0);

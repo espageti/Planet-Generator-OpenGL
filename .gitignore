@@ -4,11 +4,66 @@ Release/
 x64/
 x86/
 .vs/
+/out/
+/out/build/
+/out/build/*
 
-# === Compiled Binaries ===
+# === CMake build system ===
+build/
+Build*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# === Visual Studio 2022 ===
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.ncb
+*.opensdf
+*.sdf
+*.ipch
+
+# === Compiled binaries and intermediates ===
 *.exe
 *.dll
 *.lib
+*.so
+*.a
 *.pdb
 *.obj
 *.o
+*.idb
+*.pch
+*.bsc
+*.ilk
+
+# === User-specific files ===
+*.user
+*.userosscache
+*.sln.docstates
+
+# === Logs and crash dumps ===
+*.log
+*.dmp
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+
+# === Backup/Temporary ===
+*~
+*.tmp
+*.bak
+*.old
+*.orig
+*.bin
+/build/
+
+imgui.ini
+
