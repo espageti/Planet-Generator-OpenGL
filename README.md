@@ -31,8 +31,5 @@ A C++ compiler (e.g., MSVC on Windows, gcc or clang on Linux/macOS)
 Build Instructions
 Open a terminal or command prompt, then run the following commands from the root directory of the project:
 
-# Create a separate build directory
 cmake -S . -B build
-
-# Build the project using the generated build system
 cmake --build build
