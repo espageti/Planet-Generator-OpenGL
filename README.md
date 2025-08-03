@@ -19,7 +19,7 @@ A real time, GPU-accelerated procedural planet generator built with **OpenGL**, 
 - **Dear ImGui**
 
 ## Controls
-Look around with mouse, move around with WASD
+Look around with mouse, move around with WASD. Press Escape to interact with settings menu.
 
 ## Prerequisites
 CMake (version 3.15 or newer recommended)
