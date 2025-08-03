@@ -58,8 +58,8 @@ Sphere planet;
 Sphere atmosphere;
 float atmosphereThickness = 0.25;
 
-float m_fWavelength[3];
-float m_fWavelength4[3];
+float wavelengths[3];
+float invWavelength4[3];
 
 const float PI = 3.14159;
 const int nSamples = 16;		// Number of sample rays to use in integral equation
@@ -77,12 +77,12 @@ void Init(GLFWwindow* window) {
     // Initialize last frame time
     lastFrameTime = glfwGetTime();
 
-    m_fWavelength[0] = 650;		// 650 nm for red
-    m_fWavelength[1] = 570;		// 570 nm for green
-    m_fWavelength[2] = 475;		// 475 nm for blue
-    m_fWavelength4[0] = powf(400/m_fWavelength[0], 4.0f) * scatterStrength;
-    m_fWavelength4[1] = powf(400/m_fWavelength[1], 4.0f) * scatterStrength;
-    m_fWavelength4[2] = powf(400/m_fWavelength[2], 4.0f) * scatterStrength;
+    wavelengths[0] = 650;		// 650 nm for red
+    wavelengths[1] = 570;		// 570 nm for green
+    wavelengths[2] = 475;		// 475 nm for blue
+	invWavelength4[0] = powf(400 / wavelengths[0], 4.0f) * scatterStrength; // 400 / wavelength raised to the 4th power
+    invWavelength4[1] = powf(400/wavelengths[1], 4.0f) * scatterStrength;
+    invWavelength4[2] = powf(400/wavelengths[2], 4.0f) * scatterStrength;
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -211,32 +211,28 @@ void RenderLoop(GLFWwindow* window) {
         planetShader->setVec3("lightPos", lightPos);
 
         planetShader->setInt("nSamples", nSamples);
-        planetShader->setVec3("v3CameraPos", cameraPos);
-        planetShader->setVec3("v3LightPos", lightPos);
-        planetShader->setVec3("v3LightColor", lightColor);
-        planetShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
+        planetShader->setVec3("cameraPos", cameraPos);
+        planetShader->setVec3("lightPos", lightPos);
+        planetShader->setVec3("lightColor", lightColor);
+        planetShader->setVec3("invWavelength4", invWavelength4[0], invWavelength4[1], invWavelength4[2]);
         float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
-        planetShader->setVec3("v3SunlightIntensity", glm::vec3(1, 1, 1));
-        planetShader->setFloat("fCameraHeight", cameraHeight);
-        planetShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
+        planetShader->setFloat("cameraHeight", cameraHeight);
+        planetShader->setFloat("cameraHeight2", cameraHeight * cameraHeight);
         float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);
-        planetShader->setFloat("fOuterRadius", atmosphereRadius);
-        planetShader->setFloat("fOuterRadius2", atmosphereRadius * atmosphereRadius);
+        planetShader->setFloat("atmosphereRadius", atmosphereRadius);
+        planetShader->setFloat("atmosphereRadius2", atmosphereRadius * atmosphereRadius);
         float planetRadius = shape->radius;
-        planetShader->setFloat("fInnerRadius", planetRadius);
-        planetShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
+        planetShader->setFloat("planetRadius", planetRadius);
+        planetShader->setFloat("planetRadius2", planetRadius * planetRadius);
 
-        planetShader->setFloat("fKrESun", kRayleigh * sunBrightness);
-        planetShader->setFloat("fKmESun", kMie * sunBrightness);
-        planetShader->setFloat("fKr4PI", kRayleigh4PI);
-        planetShader->setFloat("fKm4PI", kMie4PI);
+        planetShader->setFloat("kRayleighSunBrightness", kRayleigh * sunBrightness);
+        planetShader->setFloat("kMieSunBrightness", kMie * sunBrightness);
         float scale = 1 / (atmosphereRadius - planetRadius);
-        planetShader->setFloat("fScale", scale);
-        planetShader->setFloat("fScaleDepth", 0.25);
-        planetShader->setFloat("fScaleOverScaleDepth", scale / 0.25);
+        planetShader->setFloat("scale", scale);
+        planetShader->setFloat("scaleDepth", 0.25); // the average density is found 25% of the way from ground to atmosphere
         float gMie = -0.990f;		// The Mie phase asymmetry factor
-        planetShader->setFloat("g", gMie);
-        planetShader->setFloat("g2", gMie * gMie);
+        planetShader->setFloat("gMie", gMie);
+        planetShader->setFloat("gMie2", gMie * gMie);
 
         planetShader->setFloat("densityFalloff", densityFalloff);
 
@@ -257,32 +253,29 @@ void RenderLoop(GLFWwindow* window) {
             atmosphereShader->setMat4("view", view);
             atmosphereShader->setMat4("projection", projection);
 			atmosphereShader->setInt("nSamples", nSamples);
-            atmosphereShader->setVec3("v3CameraPos", cameraPos);
-            atmosphereShader->setVec3("v3LightPos", lightPos / glm::length(lightPos));
-			atmosphereShader->setVec3("v3LightColor", lightColor);
-            atmosphereShader->setVec3("v3InvWavelength", m_fWavelength4[0], m_fWavelength4[1], m_fWavelength4[2]);
+            atmosphereShader->setVec3("cameraPos", cameraPos);
+            atmosphereShader->setVec3("lightPos", lightPos);
+			atmosphereShader->setVec3("lightColor", lightColor);
+            atmosphereShader->setVec3("invWavelength4", invWavelength4[0], invWavelength4[1], invWavelength4[2]);
             float cameraHeight = glm::length(cameraPos - glm::vec3(0, 0, 0));
-            atmosphereShader->setVec3("v3SunlightIntensity", glm::vec3(1, 1, 1));
-            atmosphereShader->setFloat("fCameraHeight", cameraHeight);
-            atmosphereShader->setFloat("fCameraHeight2", cameraHeight * cameraHeight);
+            atmosphereShader->setFloat("cameraHeight", cameraHeight);
+            atmosphereShader->setFloat("cameraHeight2", cameraHeight * cameraHeight);
             float atmosphereRadius = shape->radius * (1.0 + atmosphereThickness);
-            atmosphereShader->setFloat("fOuterRadius", atmosphereRadius);
-            atmosphereShader->setFloat("fOuterRadius2", atmosphereRadius * atmosphereRadius);
+            atmosphereShader->setFloat("atmosphereRadius", atmosphereRadius);
+            atmosphereShader->setFloat("atmosphereRadius2", atmosphereRadius * atmosphereRadius);
             float planetRadius = shape->radius;
-            atmosphereShader->setFloat("fInnerRadius", planetRadius);
-            atmosphereShader->setFloat("fInnerRadius2", planetRadius * planetRadius);
+            atmosphereShader->setFloat("planetRadius", planetRadius);
+            atmosphereShader->setFloat("planetRadius2", planetRadius * planetRadius);
 
-            atmosphereShader->setFloat("fKrESun", kRayleigh * sunBrightness);
-            atmosphereShader->setFloat("fKmESun", kMie * sunBrightness);
-            atmosphereShader->setFloat("fKr4PI", kRayleigh4PI);
+            atmosphereShader->setFloat("kRayleighSunBrightness", kRayleigh * sunBrightness);
+            atmosphereShader->setFloat("kMieSunBrightness", kMie * sunBrightness);
+            atmosphereShader->setFloat("kRayleigh4PI", kRayleigh4PI);
             atmosphereShader->setFloat("fKm4PI", kMie4PI);
             float scale = 1 / (atmosphereRadius - planetRadius);
-            atmosphereShader->setFloat("fScale", scale);
-            atmosphereShader->setFloat("fScaleDepth", 0.25);
-            atmosphereShader->setFloat("fScaleOverScaleDepth", scale / 0.25);
-            float gMie = -0.990f;		// The Mie phase asymmetry factor
-            atmosphereShader->setFloat("g", gMie);
-            atmosphereShader->setFloat("g2", gMie * gMie);
+            atmosphereShader->setFloat("scale", scale);
+			atmosphereShader->setFloat("scaleDepth", 0.25); // the average density is found 25% of the way from ground to atmosphere
+            atmosphereShader->setFloat("gMie", gMie);
+            atmosphereShader->setFloat("gMie2", gMie * gMie);
 
             atmosphereShader->setFloat("densityFalloff", densityFalloff);
 
