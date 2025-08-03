@@ -64,3 +64,6 @@ Thumbs.db
 *.orig
 *.bin
 /build/
+
+imgui.ini
+
