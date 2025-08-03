@@ -21,7 +21,7 @@ out vec3 vPosition;
 out float vElevation;
 out vec3 vUnitSpherePos;
 #include "noise.glsl"
-#include "common.vert"
+#include "scattering.glsl"
 
 // Evaluate layered noise on unit sphere
 float EvaluateNoise(vec3 pointOnUnitSphere) {

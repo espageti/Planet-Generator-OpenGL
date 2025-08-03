@@ -56,5 +56,5 @@ void main() {
     float fRayleighPhase = 0.75 * (1.0 + fCos*fCos);
     vec4 atmospheric = gRayleighColor * fRayleighPhase + fMiePhase * gMieColor;
     vec4 realColor = vec4(vBiomeColor * phong, 1);
-    FragColor = realColor * atmospheric + atmospheric * 0.5 + realColor * 0.4; // Add a bit of atmosphere to the final color
+    FragColor = realColor * atmospheric * 0.6 + atmospheric * 0.1 + realColor * 0.4; // Add a bit of atmosphere to the final color
 }
