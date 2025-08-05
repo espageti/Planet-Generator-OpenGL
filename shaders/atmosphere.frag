@@ -14,9 +14,10 @@ out vec4 FragColor;
 
 void main() {
     float fCos = dot(normalize(lightPos), normalize(v3Direction));
-    float fMiePhase = 1.5 * ((1.0 - gMie2) / (2.0 + gMie2)) * (1.0 + fCos*fCos) / pow(1.0 + gMie2 - 2.0*gMie*fCos, 1.5);
+    float fCos2 = fCos * fCos;
+    float fMiePhase = 1.5 * ((1.0 - gMie2) / (2.0 + gMie2)) * (1.0 + fCos2) / pow(1.0 + gMie2 - 2.0*gMie*fCos, 1.5);
     
-    float fRayleighPhase = 0.75 * (1.0 + fCos*fCos);
+    float fRayleighPhase = 0.75 * (1.0 + fCos2);
     vec4 combinedColor = rayleighColor * fRayleighPhase + fMiePhase * mieColor;
     FragColor = 1.0 -  exp(combinedColor * -exposure);
 }

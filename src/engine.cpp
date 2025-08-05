@@ -66,9 +66,8 @@ const int nSamples = 16;		// Number of sample rays to use in integral equation
 const float kRayleigh = 0.0025f;		// Rayleigh scattering constant
 
 const float kMie = 0.0010f;		// Mie scattering constant
-
+float gMie;  // Mie phase function asymmetry parameter
 const float sunBrightness = 200.0f;		// Sun brightness constant
-const float gMie = -0.990f;		// The Mie phase asymmetry factor
 const float exposure = 2.0f;
 
 
@@ -98,7 +97,6 @@ void Init(GLFWwindow* window) {
     // Load shader
     planetShader = new Shader("shaders/planet.vert", "shaders/planet.frag", "shaders/planet.geom" );
     planetShader->enable();
-	std::cout << "light color: " << lightColor.x << " " << lightColor.y << " " << lightColor.z << std::endl;
     planetShader->setVec3("lightColor", lightColor);
     planetShader->setFloat("maxElevation", atmosphereThickness);
 
@@ -233,7 +231,7 @@ void RenderLoop(GLFWwindow* window) {
         float scale = 1 / (atmosphereRadius - planetRadius);
         planetShader->setFloat("scale", scale);
         planetShader->setFloat("scaleDepth", 0.25); // the average density is found 25% of the way from ground to atmosphere
-        float gMie = -0.990f;		// The Mie phase asymmetry factor
+        
         planetShader->setFloat("gMie", gMie);
         planetShader->setFloat("gMie2", gMie * gMie);
 
@@ -275,6 +273,7 @@ void RenderLoop(GLFWwindow* window) {
             float scale = 1 / (atmosphereRadius - planetRadius);
             atmosphereShader->setFloat("scale", scale);
 			atmosphereShader->setFloat("scaleDepth", 0.25); // the average density is found 25% of the way from ground to atmosphere
+			std::cout << "gMie: " << gMie << std::endl;
             atmosphereShader->setFloat("gMie", gMie);
             atmosphereShader->setFloat("gMie2", gMie * gMie);
 

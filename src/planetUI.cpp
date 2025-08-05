@@ -135,6 +135,7 @@ namespace PlanetUI {
         
         ImGui::Checkbox("Atmosphere", &atmosphereEnabled);
         ImGui::Checkbox("First Person", &firstPersonMode);
+        ImGui::SliderFloat("G Mie", &gMie, -1.0f, 1.0f);
 		ImGui::ColorEdit3("Light Color", (float*) &lightColor);
         bool update = DrawNoiseLayerControls(shape);
         ImGui::Checkbox("Auto Regenerate", &autoRegen);

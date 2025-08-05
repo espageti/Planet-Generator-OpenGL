@@ -114,6 +114,7 @@ void setScattering(vec3 v3Pos)
     for(int i = 0; i < nSamples; i++) {
         vec3 sunDir = normalize(lightPos);
         
+        // prevent numerical issues by moving the sample point slightly towards the sun (in case the point is just on the surface, make sure it's slightly above the surface)
         v3SamplePoint += sunDir * 0.001;
         float fSunRayLength = getFarIntersection(v3SamplePoint, sunDir,
                                                dot(v3SamplePoint, v3SamplePoint),
@@ -125,7 +126,8 @@ void setScattering(vec3 v3Pos)
         // total optical depth between camera and sample point
         // used  to calculate how much light would be scattered by the atmosphere going from sample point to camera
         float fViewRayDepth = opticalDepth(v3SamplePoint, -v3Ray, length(v3SamplePoint - cameraPos) - fNear);
-    
+
+        // transmittance is the amount of light that reaches the sample point from the sun
         vec3 transmittance = exp((-sunRayOpticalDepth - fViewRayDepth) * invWavelength4);
         float localDensity = densityAtPoint(v3SamplePoint);
     
