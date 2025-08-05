@@ -69,7 +69,7 @@ float densityAtPoint(vec3 densitySamplePoint)
 float opticalDepth(vec3 rayOrigin, vec3 rayDir, float rayLength)
 {
     vec3 densitySamplePoint = rayOrigin;
-    float stepSize = rayLength / (nSamples - 1);
+    float stepSize = rayLength / (depthSamples - 1);
     float opticalDepth = 0;
     for (int i = 0; i < depthSamples; i++)
     {
