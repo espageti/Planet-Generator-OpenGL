@@ -32,6 +32,7 @@ glm::mat3 cameraBasis = glm::mat3(
     glm::vec3(0, 0, 1)  // forward (z)
 );
 
+glm::mat4 rotation;
 
 float yaw = 90.0f;  // Initialize facing towards Z
 float pitch = 0.0f;
@@ -114,6 +115,7 @@ void Init(GLFWwindow* window) {
     atmosphere.Create(shape->radius * (1.0 + atmosphereThickness), shape->resolution);
     SetNoiseLayers(shape->noiseLayers);
 
+    rotation = glm::mat4(1.0f);
 }
 
 void UpdateFPS() {
@@ -186,7 +188,7 @@ void RenderLoop(GLFWwindow* window) {
 
         // Set transformation matrices
 
-        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
+        rotation = glm::rotate(rotation, glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
         if (firstPersonMode)
         {
             cameraPos = glm::vec3(rotation * glm::vec4(cameraPos, 1.0));
