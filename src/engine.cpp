@@ -196,6 +196,8 @@ void RenderLoop(GLFWwindow* window) {
 			std::cout << "Camera Position: " << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << std::endl;
              // Ensure direction is unit length
             cameraUp = glm::normalize(cameraUp);
+
+            cameraBasis[0] = glm::vec3(cameraRotation * glm::vec4(cameraBasis[0], 1.0));
             glm::vec3 up = normalize(cameraPos);
             glm::vec3 forward = glm::normalize(glm::cross(up, -cameraBasis[0]));
             glm::vec3 right = -normalize(cross(forward, up));
