@@ -67,7 +67,7 @@ const int nSamples = 16;		// Number of sample rays to use in integral equation
 const float kRayleigh = 0.0025f;		// Rayleigh scattering constant
 
 const float kMie = 0.0010f;		// Mie scattering constant
-float gMie;  // Mie phase function asymmetry parameter
+float gMie = -0.99;  // Mie phase function asymmetry parameter
 const float sunBrightness = 200.0f;		// Sun brightness constant
 const float exposure = 2.0f;
 
@@ -191,7 +191,9 @@ void RenderLoop(GLFWwindow* window) {
         rotation = glm::rotate(rotation, glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
         if (firstPersonMode)
         {
-            cameraPos = glm::vec3(rotation * glm::vec4(cameraPos, 1.0));
+			glm::mat4 cameraRotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
+            cameraPos = glm::vec3(cameraRotation * glm::vec4(cameraPos, 1.0));
+			std::cout << "Camera Position: " << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << std::endl;
              // Ensure direction is unit length
             cameraUp = glm::normalize(cameraUp);
             glm::vec3 up = normalize(cameraPos);
