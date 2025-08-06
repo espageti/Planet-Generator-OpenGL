@@ -137,5 +137,5 @@ void setScattering(vec3 v3Pos)
     v3Direction = normalize(cameraPos - v3Pos);
 
     mieColor.rgb = kMieSunBrightness * v3FrontColor * lightColor;
-    rayleighColor.rgb = kRayleighSunBrightness * v3FrontColor * lightColor;
+    rayleighColor.rgb = kRayleighSunBrightness * v3FrontColor * lightColor * invWavelength4;
 }
