@@ -1,6 +1,7 @@
 #pragma once
 #include "engine.h" 
-#include <imgui/imgui.h>
+#include <imgui.h>
+#include <functional>
 
 namespace PlanetUI {
     bool DrawNoiseLayerControls(ShapeSettings* shape);

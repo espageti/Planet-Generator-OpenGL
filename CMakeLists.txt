@@ -13,13 +13,7 @@ set(SOURCES
     src/perlinNoiseFilter.cpp
     src/planetUI.cpp
     src/sphere.cpp
-    imgui/imgui.cpp
-    imgui/imgui_demo.cpp
-    imgui/imgui_draw.cpp
-    imgui/imgui_impl_glfw.cpp
-    imgui/imgui_impl_opengl3.cpp
-    imgui/imgui_tables.cpp
-    imgui/imgui_widgets.cpp
+
 )
 
 add_executable(OpenGLPlanet ${SOURCES})
@@ -50,11 +44,54 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glfw)
 
+# ================================
+# FetchContent: GLM
+# ================================
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 1.0.1
+)
+FetchContent_MakeAvailable(glm)
+
+# ================================
+# FetchContent: ImGui
+# ================================
+
+FetchContent_Populate(imgui
+  URL https://github.com/ocornut/imgui/archive/docking.zip
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui
+)
+
+
+add_library(imgui_glfw STATIC
+  imgui/imgui.cpp
+  imgui/imgui_draw.cpp
+  imgui/imgui_demo.cpp
+  imgui/imgui_tables.cpp
+  imgui/imgui_widgets.cpp
+
+  imgui/backends/imgui_impl_glfw.cpp
+  imgui/backends/imgui_impl_opengl3.cpp
+)
+
+target_link_libraries(imgui_glfw PUBLIC glfw)
+
+target_include_directories(imgui_glfw
+PUBLIC
+  ${CMAKE_CURRENT_LIST_DIR}/imgui
+  ${CMAKE_CURRENT_LIST_DIR}/imgui/backends
+)
+
 # Link GLFW and OpenGL libraries
 target_link_libraries(OpenGLPlanet PRIVATE
     glfw
     opengl32
+    glm::glm
+    imgui_glfw
 )
+
+
 
 # Shader copy
 add_custom_command(TARGET OpenGLPlanet POST_BUILD
