@@ -42,3 +42,8 @@ This project was fully designed and implemented by me, Darren Lin.
 I built the procedural mesh generation, noise layering system, GLSL shaders for terrain and atmosphere rendering, interactive camera, and the ImGui-based UI. All code in the `src/` and `shaders/` folders is my own work.
 
 Third-party libraries (ImGui, GLFW, GLAD, GLM) are used under their respective licenses and credited to their original authors.
+
+## Preview
+
+![Planet from Space](images/atmosphere-space.png)
+![Planet from Surface](images/atmosphere-sunset.png)
