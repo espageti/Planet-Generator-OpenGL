@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(OpenGLPlanet LANGUAGES C CXX)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 set(OpenGL_ROOT "C:/OpenGL" CACHE PATH "Root directory for OpenGL/ImGui installations")
 
 set(VENDOR_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor" CACHE PATH "Vendor directory")
